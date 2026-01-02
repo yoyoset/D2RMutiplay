@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.5.2 (2026-01-02) - Dark Mode & UI Refinement
+
+### Features
+*   **Dark Mode Support**: Introduced a global Dark/Light theme toggle (Sun/Moon icon).
+    *   **Theme Persistence**: Automatically remembers your last used theme on startup.
+    *   **UI Polish**: Refined button styles, input backgrounds, and dropdowns for optimal visibility in dark environments.
+    *   **Consistent Experience**: Extended theming to all secondary windows (Create User, Link User).
+
+## v0.5.1 (2026-01-02) - Donation & Community
+
+### Features
+*   **Donation Window**: Added "Donate & Boost Luck" feature to support development.
+    *   Supported methods: WeChat Pay, Alipay, Paypal.
+    *   Accessible via the header heart icon (💜).
+
+## v0.5.0 (2026-01-02) - Localization
+
+### Features
+*   **Multi-Language Support**:
+    *   Added support for **English (Default), Simplified Chinese, Traditional Chinese, Japanese, and Korean**.
+    *   Refactored UI to use a dynamic `LocalizationManager` for runtime language switching.
+    *   Updated all documentation (README) to reflect bilingual changes.
+
 ## v0.4.1 (2026-01-02)
 
 ### Core Logic Updates

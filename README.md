@@ -13,6 +13,9 @@
 *   **Session Persistence (会话保持)**: Utilizes isolated Windows User Profiles to maintain independent Battle.net login sessions. Log in once, and stay logged in. (利用隔离的 Windows 用户配置文件来保持独立的战网登录会话。只需登录一次，即可保持长久在线。)
 *   **Game Path Mirroring (游戏路径镜像)**: Creates NTFS Junctions (Virtual Mirrors) of the game folder to trick Battle.net into seeing unique paths for each account without duplicating game data. (创建游戏目录的 NTFS 软链接镜像，在不占用额外硬盘空间的情况下，欺骗战网认为每个账号有独立的安装路径，彻底解决“游戏正在运行”错误。)
 *   **Window Management (窗口管理)**: Easily switch and arrange multiple game windows. (方便地切换和排列多个游戏窗口。)
+*   **Localization (多语言支持)**: Supports **English, Simplified Chinese (简中), Traditional Chinese (繁中), Japanese (日语), Korean (韩语)**. Switch instantly via the dropdown. (支持5种语言实时切换。)
+*   **Dark Mode (深色模式)**: Built-in Dark/Light theme toggle for comfortable usage in any environment. (内置深色/浅色主题切换，适应不同环境。)
+*   **Community Support (社区支持)**: "Donate & Boost Luck" feature to support the developer. (捐赠与支持功能。)
 
 ## Getting Started (快速开始)
 

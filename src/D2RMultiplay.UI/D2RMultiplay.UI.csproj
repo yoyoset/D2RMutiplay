@@ -21,6 +21,8 @@
   <ItemGroup>
     <Resource Include="app.ico" />
     <Resource Include="background.png" />
+    <Resource Include="Assets\Images\*.png" />
+    <Resource Include="Assets\Images\*.jpg" />
   </ItemGroup>
 
 </Project>

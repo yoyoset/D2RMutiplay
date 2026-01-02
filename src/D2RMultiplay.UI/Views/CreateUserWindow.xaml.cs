@@ -1,4 +1,5 @@
 using System.Windows;
+using D2RMultiplay.UI.Services;
 
 namespace D2RMultiplay.UI.Views
 {
@@ -9,21 +10,22 @@ namespace D2RMultiplay.UI.Views
         public string BattleTag { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
 
-        public CreateUserWindow(bool isChinese)
+        public CreateUserWindow()
         {
             InitializeComponent();
-            
-            if (isChinese)
-            {
-                Title = "新建 Windows 用户";
-                TitleText.Text = "新建 Windows 用户";
-                LabelUser.Text = "用户名:";
-                LabelPass.Text = "密码:";
-                LabelBattleTag.Text = "战网账号 (别名):";
-                LabelNote.Text = "备注 (Note):"; // Align with MainViewModel
-                BtnCreate.Content = "创建";
-                BtnCancel.Content = "取消";
-            }
+            ApplyLocalization();
+        }
+
+        private void ApplyLocalization()
+        {
+            Title = LocalizationManager.GetText("CreateUserTitle");
+            TitleText.Text = LocalizationManager.GetText("CreateUserTitle");
+            LabelUser.Text = LocalizationManager.GetText("LabelUser");
+            LabelPass.Text = LocalizationManager.GetText("LabelPassword");
+            LabelBattleTag.Text = LocalizationManager.GetText("LabelBattleTag");
+            LabelNote.Text = LocalizationManager.GetText("LabelNote");
+            BtnCreate.Content = LocalizationManager.GetText("BtnCreate");
+            BtnCancel.Content = LocalizationManager.GetText("BtnCancel");
         }
 
         private void BtnCreate_Click(object sender, RoutedEventArgs e)
@@ -35,13 +37,13 @@ namespace D2RMultiplay.UI.Views
 
             if (string.IsNullOrWhiteSpace(Username))
             {
-                MessageBox.Show(Title == "新建 Windows 用户" ? "请输入用户名。" : "Please enter a username.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LocalizationManager.GetText("MsgEnterUsername"), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(Password))
             {
-                MessageBox.Show(Title == "新建 Windows 用户" ? "请输入密码。" : "Please enter a password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LocalizationManager.GetText("MsgEnterPassword"), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

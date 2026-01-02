@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Link Existing User" Height="280" Width="400"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#FAFAFA">
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource PrimaryText}">
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,17 +12,17 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <TextBlock x:Name="TitleText" Text="Select Windows User" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+        <TextBlock x:Name="TitleText" Text="Select Windows User" FontSize="16" FontWeight="Bold" Margin="0,0,0,15" Foreground="{DynamicResource PrimaryText}"/>
 
-        <TextBlock x:Name="LabelUser" Grid.Row="1" Text="Select Windows User:" Margin="0,0,0,2"/>
-        <ComboBox x:Name="CmbUsers" Grid.Row="2" Height="25" Margin="0,0,0,15" DisplayMemberPath="." IsEditable="True"/>
+        <TextBlock x:Name="LabelUser" Grid.Row="1" Text="Select Windows User:" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+        <ComboBox x:Name="CmbUsers" Grid.Row="2" Height="25" Margin="0,0,0,15" DisplayMemberPath="." IsEditable="False" Style="{DynamicResource StandardComboBoxStyle}"/>
 
-        <TextBlock x:Name="LabelPass" Grid.Row="3" Text="Password (Required for Verification):" Margin="0,0,0,2"/>
-        <PasswordBox x:Name="TxtPassword" Grid.Row="4" Height="25" Margin="0,0,0,20"/>
+        <TextBlock x:Name="LabelPass" Grid.Row="3" Text="Password (Required for Verification):" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+        <PasswordBox x:Name="TxtPassword" Grid.Row="4" Height="25" Margin="0,0,0,20" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button x:Name="BtnLink" Content="Link User" Click="BtnLink_Click" Width="100" Height="30" Margin="0,0,10,0" IsDefault="True" Background="#E0FFE0"/>
-            <Button x:Name="BtnCancel" Content="Cancel" Click="BtnCancel_Click" Width="80" Height="30" IsCancel="True"/>
+            <Button x:Name="BtnLink" Content="Link User" Click="BtnLink_Click" Width="100" Height="30" Margin="0,0,10,0" IsDefault="True" Background="#E0FFE0" Foreground="Black"/>
+            <Button x:Name="BtnCancel" Content="Cancel" Click="BtnCancel_Click" Width="80" Height="30" IsCancel="True" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}"/>
         </StackPanel>
     </Grid>
 </Window>

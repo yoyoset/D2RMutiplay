@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:D2RMultiplay.UI"
         mc:Ignorable="d"
-        Title="{Binding WindowTitle}" Height="750" Width="1000" Background="#FAFAFA"
+        Title="{Binding WindowTitle}" Height="750" Width="1000" Background="{DynamicResource WindowBackground}"
+        MinWidth="1000" MinHeight="750"
         Icon="app.ico">
     
     <Grid Margin="15">
@@ -24,18 +25,53 @@
 
         <!-- Header -->
         <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15">
-            <!-- Language Dropdown -->
+            <!-- Right Side Controls -->
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
-                <TextBlock Text="{Binding LabelLanguage}" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="#555"/>
-                <ComboBox ItemsSource="{Binding AvailableLanguages}" SelectedItem="{Binding SelectedLanguage}" 
+                <!-- Theme Toggle -->
+                <Button Command="{Binding ToggleThemeCommand}" Margin="0,0,10,0" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Toggle Theme">
+                   <TextBlock Text="🌗" FontSize="16" Foreground="{DynamicResource PrimaryText}"/>
+                </Button>
+                
+                <!-- Support Button -->
+                <Button Command="{Binding OpenDonationCommand}" Margin="0,0,15,0" Cursor="Hand" Background="Transparent" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Content>
+                        <TextBlock Text="{Binding BtnSupport}" Foreground="#E040FB" FontWeight="Bold">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                            <Setter Property="Foreground" Value="#FF40FB"/> 
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button.Content>
+                </Button>
+
+                <TextBlock Text="{Binding LabelLanguage}" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource SecondaryText}"/>
+                <ComboBox ItemsSource="{Binding AvailableLanguages}" SelectedItem="{Binding SelectedLanguage}" Style="{DynamicResource StandardComboBoxStyle}"
                           Width="100" Height="25"/>
             </StackPanel>
             
-            <TextBlock Text="{Binding WindowTitle}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="#333"/>
+            <TextBlock Text="{Binding WindowTitle}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryText}"/>
         </DockPanel>
 
         <!-- LEFT PANEL: User Management & List -->
-        <Border Grid.Row="1" Grid.Column="0" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4" Background="White" Margin="0,0,15,0" Padding="10">
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource PanelBackground}" Margin="0,0,15,0" Padding="10">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/> <!-- Manage Group -->
@@ -44,7 +80,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Management Group -->
-                <GroupBox Header="{Binding GroupUserMgmt}" BorderBrush="#CCC" Foreground="#444" Margin="0,0,0,10">
+                <GroupBox Header="{Binding GroupUserMgmt}" BorderBrush="{DynamicResource BorderBrush}" Foreground="{DynamicResource PrimaryText}" Margin="0,0,0,10">
                     <StackPanel Margin="5">
                         
                         <!-- Buttons: Link / Create -->
@@ -54,43 +90,44 @@
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Content="{Binding BtnLinkExisting}" Command="{Binding LinkExistingUserCommand}" Height="30" Background="#F0F0F0"/>
-                            <Button Grid.Column="2" Content="{Binding BtnCreateNew}" Command="{Binding CreateNewUserCommand}" Height="30" Background="#F0F0F0"/>
+                            <Button Grid.Column="0" Content="{Binding BtnLinkExisting}" Command="{Binding LinkExistingUserCommand}" Style="{DynamicResource StandardButtonStyle}" Height="30" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}"/>
+                            <Button Grid.Column="2" Content="{Binding BtnCreateNew}" Command="{Binding CreateNewUserCommand}" Style="{DynamicResource StandardButtonStyle}" Height="30" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}"/>
                         </Grid>
 
-                        <TextBlock Text="{Binding LabelInputUser}" FontWeight="Normal" Margin="0,0,0,2"/>
-                        <TextBox Text="{Binding InputUsername, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="#F9F9F9"/>
+                        <TextBlock Text="{Binding LabelInputUser}" FontWeight="Normal" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+                        <TextBox Text="{Binding InputUsername, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
 
-                        <TextBlock Text="{Binding LabelInputPass}" FontWeight="Normal" Margin="0,0,0,2"/>
-                        <TextBox Text="{Binding InputPassword, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="#F9F9F9"/>
+                        <TextBlock Text="{Binding LabelInputPass}" FontWeight="Normal" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+                        <TextBox Text="{Binding InputPassword, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
 
-                        <TextBlock Text="{Binding LabelInputBattleTag}" FontWeight="Normal" Margin="0,0,0,2"/>
-                        <TextBox Text="{Binding InputBattleTag, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="#F9F9F9"/>
+                        <TextBlock Text="{Binding LabelInputBattleTag}" FontWeight="Normal" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+                        <TextBox Text="{Binding InputBattleTag, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
 
-                        <TextBlock Text="{Binding LabelInputNote}" FontWeight="Normal" Margin="0,0,0,2"/>
-                        <TextBox Text="{Binding InputNote, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,10" Background="#F9F9F9"/>
+                        <TextBlock Text="{Binding LabelInputNote}" FontWeight="Normal" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+                        <TextBox Text="{Binding InputNote, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,10" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
 
                          <!-- Save Button (Corrected to UpdateUserCommand) -->
-                         <Button Content="{Binding BtnUpdate}" Command="{Binding UpdateUserCommand}" Height="35" Margin="0,5,0,0" Background="#E0FFE0" FontSize="12" FontWeight="Bold"/>
+                         <Button Content="{Binding BtnUpdate}" Command="{Binding UpdateUserCommand}" Style="{DynamicResource StandardButtonStyle}" 
+                                 Height="35" Margin="0,5,0,0" Background="{DynamicResource SuccessBackground}" Foreground="{DynamicResource SuccessForeground}" FontWeight="Bold"/>
 
                          <!-- Delete System User Button (Danger Style) -->
-                         <Button Content="{Binding BtnDeleteSysUser}" Command="{Binding DeleteSystemUserCommand}" 
-                                 Height="35" Margin="0,10,0,0" Background="#FFEEEE" BorderBrush="Red" BorderThickness="1"
-                                 Foreground="#CC0000" FontSize="11" FontWeight="Bold" 
+                         <Button Content="{Binding BtnDeleteSysUser}" Command="{Binding DeleteSystemUserCommand}" Style="{DynamicResource StandardButtonStyle}"
+                                 Height="35" Margin="0,10,0,0" Background="{DynamicResource DangerBackground}" BorderBrush="{DynamicResource DangerBorder}" 
+                                 Foreground="{DynamicResource DangerForeground}" FontWeight="Bold" 
                                  ToolTip="⚠️ CAUTION: Deletes Windows User &amp; Account Data"/>
 
                     </StackPanel>
                 </GroupBox>
 
                 <!-- List -->
-                <ListBox Grid.Row="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="DisplayName" BorderThickness="0" Background="#F5F5F5" Margin="0,5,0,5"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="DisplayName" BorderThickness="0" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource PrimaryText}" Margin="0,5,0,5"/>
                 
-                <Button Grid.Row="2" Content="{Binding BtnDelete}" Command="{Binding DeleteCommand}" Height="30" Background="#F0F0F0" Margin="0,5,0,0"/>
+                <Button Grid.Row="2" Content="{Binding BtnDelete}" Command="{Binding DeleteCommand}" Style="{DynamicResource StandardButtonStyle}" Height="30" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}" Margin="0,5,0,0"/>
             </Grid>
         </Border>
 
         <!-- RIGHT PANEL: Launch & Manual -->
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4" Background="White" Padding="15">
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource PanelBackground}" Padding="15">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/> <!-- Launch Ops -->
@@ -100,15 +137,15 @@
                 </Grid.RowDefinitions>
 
                 <!-- 1. Launch Ops -->
-                <GroupBox Header="{Binding GroupLaunchOps}" BorderBrush="#CCC" Foreground="#444" Margin="0,0,0,15">
+                <GroupBox Header="{Binding GroupLaunchOps}" BorderBrush="{DynamicResource BorderBrush}" Foreground="{DynamicResource PrimaryText}" Margin="0,0,0,15">
                      <StackPanel Margin="10">
-                         <TextBlock Text="{Binding LabelCurrentAccount}" FontWeight="Bold" Margin="0,0,0,5"/>
+                         <TextBlock Text="{Binding LabelCurrentAccount}" FontWeight="Bold" Margin="0,0,0,5" Foreground="{DynamicResource PrimaryText}"/>
                          
                          <TextBlock Text="{Binding SelectedAccount.DisplayName, FallbackValue='(None)'}" 
-                                    FontSize="14" Foreground="#007ACC" Margin="0,0,0,10"/>
+                                    FontSize="14" Foreground="{DynamicResource LinkText}" Margin="0,0,0,10"/>
 
-                         <TextBlock Text="{Binding LabelGamePath}" Margin="0,0,0,2"/>
-                         <TextBox Text="{Binding SelectedAccount.GamePath}" IsReadOnly="True" Background="#F0F0F0" Height="25" Margin="0,0,0,5"/>
+                         <TextBlock Text="{Binding LabelGamePath}" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
+                         <TextBox Text="{Binding SelectedAccount.GamePath}" IsReadOnly="True" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}" Height="25" Margin="0,0,0,5"/>
                          
                          <Grid Margin="0,0,0,5">
                              <Grid.ColumnDefinitions>
@@ -116,16 +153,16 @@
                                  <ColumnDefinition Width="10"/>
                                  <ColumnDefinition Width="*"/>
                              </Grid.ColumnDefinitions>
-                             <Button Grid.Column="0" Content="{Binding BtnPickPath}" Command="{Binding PickPathCommand}" Height="30"/>
-                             <Button Grid.Column="2" Content="{Binding BtnCreateMirror}" Command="{Binding CreateMirrorCommand}" Height="30"/>
+                             <Button Grid.Column="0" Content="{Binding BtnPickPath}" Command="{Binding PickPathCommand}" Style="{DynamicResource StandardButtonStyle}" Height="30" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}"/>
+                             <Button Grid.Column="2" Content="{Binding BtnCreateMirror}" Command="{Binding CreateMirrorCommand}" Style="{DynamicResource StandardButtonStyle}" Height="30" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}"/>
                          </Grid>
 
-                         <TextBlock Text="{Binding LabelPathHint}" FontSize="11" Foreground="#666" TextWrapping="Wrap" FontStyle="Italic"/>
+                         <TextBlock Text="{Binding LabelPathHint}" FontSize="11" Foreground="{DynamicResource SecondaryText}" TextWrapping="Wrap" FontStyle="Italic"/>
                      </StackPanel>
                 </GroupBox>
 
                 <!-- 2. Manual Tools -->
-                <GroupBox Grid.Row="1" Header="{Binding GroupManual}" BorderBrush="#CCC" Foreground="#444" Margin="0,0,0,10">
+                <GroupBox Grid.Row="1" Header="{Binding GroupManual}" BorderBrush="{DynamicResource BorderBrush}" Foreground="{DynamicResource PrimaryText}" Margin="0,0,0,10">
                     <StackPanel Margin="5">
                          <Grid Margin="0,0,0,5">
                              <Grid.ColumnDefinitions>
@@ -133,13 +170,13 @@
                                  <ColumnDefinition Width="5"/>
                                  <ColumnDefinition Width="*"/>
                              </Grid.ColumnDefinitions>
-                             <Button Grid.Column="0" Content="{Binding BtnKillBnet}" Command="{Binding KillBnetCommand}" Height="35" Background="#FFE0E0"/>
-                             <Button Grid.Column="2" Content="{Binding BtnCleanConfig}" Command="{Binding CleanConfigCommand}" Height="35" Background="#FFF8DC"/>
+                             <Button Grid.Column="0" Content="{Binding BtnKillBnet}" Command="{Binding KillBnetCommand}" Style="{DynamicResource StandardButtonStyle}" Height="35" Background="{DynamicResource DangerBackground}" Foreground="{DynamicResource DangerForeground}"/>
+                             <Button Grid.Column="2" Content="{Binding BtnCleanConfig}" Command="{Binding CleanConfigCommand}" Style="{DynamicResource StandardButtonStyle}" Height="35" Background="{DynamicResource WarningBackground}" Foreground="{DynamicResource WarningForeground}"/>
                          </Grid>
-                         <Button Content="{Binding BtnKillMutex}" Command="{Binding KillMutexCommand}" Height="35" Background="#E0F7FA"/>
+                         <Button Content="{Binding BtnKillMutex}" Command="{Binding KillMutexCommand}" Style="{DynamicResource StandardButtonStyle}" Height="35" Background="{DynamicResource ActionBackground}" Foreground="{DynamicResource ActionForeground}"/>
                          <!-- New Snapshot Button -->
-                         <Button Content="{Binding BtnSnapshotConfig}" Command="{Binding SnapshotConfigCommand}" 
-                                 Height="35" Margin="0,5,0,0" Background="#F0E6FA" 
+                         <Button Content="{Binding BtnSnapshotConfig}" Command="{Binding SnapshotConfigCommand}" Style="{DynamicResource StandardButtonStyle}"
+                                 Height="35" Margin="0,5,0,0" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}" 
                                  ToolTip="Auto-Restore Config on next launch"/>
                     </StackPanel>
                 </GroupBox>
@@ -147,15 +184,15 @@
                 <!-- Launch Buttons -->
                 <StackPanel Grid.Row="3" VerticalAlignment="Bottom">
                     <!-- Warning Box -->
-                    <Border Background="#FFF4E5" BorderBrush="#FFCC00" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10" Padding="8">
-                        <TextBlock Text="{Binding LabelManualLoginWarning}" TextWrapping="Wrap" FontSize="11" Foreground="#CC5500" FontWeight="SemiBold"/>
+                    <Border Background="{DynamicResource WarningBackground}" BorderBrush="{DynamicResource WarningBorder}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10" Padding="8">
+                        <TextBlock Text="{Binding LabelManualLoginWarning}" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource WarningForeground}" FontWeight="SemiBold"/>
                     </Border>
 
-                    <Button Content="{Binding BtnLaunchAuto}" Command="{Binding OneClickLaunchCommand}" 
-                            Height="60" FontSize="18" FontWeight="Bold" Background="#90EE90" Margin="0,0,0,10"/>
+                    <Button Content="{Binding BtnLaunchAuto}" Command="{Binding OneClickLaunchCommand}" Style="{DynamicResource StandardButtonStyle}" 
+                            Height="60" FontSize="18" FontWeight="Bold" Background="{DynamicResource SuccessBackground}" Foreground="{DynamicResource SuccessForeground}" Margin="0,0,0,10"/>
                     
-                    <Button Content="{Binding BtnLaunchDirect}" Command="{Binding DirectLaunchCommand}" 
-                            Height="40" FontSize="12" Background="White" BorderBrush="#DDD" Foreground="#666"/>
+                    <Button Content="{Binding BtnLaunchDirect}" Command="{Binding DirectLaunchCommand}" Style="{DynamicResource StandardButtonStyle}" 
+                            Height="40" FontSize="12" Background="{DynamicResource ControlBackground}" BorderBrush="{DynamicResource BorderBrush}" Foreground="{DynamicResource SecondaryText}"/>
                     
                     <!-- Launch Hint Removed -->
                 </StackPanel>
@@ -163,15 +200,15 @@
         </Border>
 
         <!-- Status -->
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0" Background="#EEE">
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0" Background="{DynamicResource ControlBackground}" Foreground="{DynamicResource PrimaryText}">
             <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock Text="{Binding LabelCopyright}" Foreground="#999" FontSize="10" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding LabelCopyright}" Foreground="{DynamicResource SecondaryText}" FontSize="10" Margin="0,0,10,0"/>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Right" Margin="0,0,15,0">
                 <TextBlock Text="{Binding LabelAdminStatus}" Foreground="{Binding ColorAdminStatus}" FontWeight="Bold"/>
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding StatusMessage}" FontWeight="SemiBold" Foreground="#333"/>
+                <TextBlock Text="{Binding StatusMessage}" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryText}"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Windows;
+using D2RMultiplay.UI.Services;
 
 namespace D2RMultiplay.UI.Views
 {
@@ -8,18 +9,21 @@ namespace D2RMultiplay.UI.Views
         public string SelectedUsername { get; private set; } = string.Empty;
         public string Password { get; private set; } = string.Empty;
 
-        public UserSelectionWindow(List<string> users, bool isChinese = false)
+        public UserSelectionWindow(List<string> users)
         {
             InitializeComponent();
-            
+            ApplyLocalization();
+
             // Mark Current User
             string currentUser = System.Environment.UserName;
             var displayList = new List<string>();
+            string suffix = LocalizationManager.GetText("SuffixCurrent");
+
             foreach(var u in users)
             {
                 if(u.Equals(currentUser, System.StringComparison.OrdinalIgnoreCase))
                 {
-                    displayList.Add(u + (isChinese ? " (当前用户)" : " (Current)"));
+                    displayList.Add(u + suffix);
                 }
                 else
                 {
@@ -35,16 +39,16 @@ namespace D2RMultiplay.UI.Views
             else if (users.Count > 0) CmbUsers.SelectedIndex = 0;
 
             TxtPassword.Focus();
+        }
 
-            if (isChinese)
-            {
-                Title = "关联现有用户";
-                TitleText.Text = "选择 Windows 用户";
-                LabelUser.Text = "选择 Windows 用户:";
-                LabelPass.Text = "密码 (用于验证):";
-                BtnLink.Content = "关联用户";
-                BtnCancel.Content = "取消";
-            }
+        private void ApplyLocalization()
+        {
+            Title = LocalizationManager.GetText("LinkUserTitle");
+            TitleText.Text = LocalizationManager.GetText("SelectUserTitle");
+            LabelUser.Text = LocalizationManager.GetText("LabelSelectUser");
+            LabelPass.Text = LocalizationManager.GetText("LabelVerifyPass");
+            BtnLink.Content = LocalizationManager.GetText("BtnLink");
+            BtnCancel.Content = LocalizationManager.GetText("BtnCancel");
         }
 
         private void BtnLink_Click(object sender, RoutedEventArgs e)
@@ -52,7 +56,9 @@ namespace D2RMultiplay.UI.Views
             string rawSelection = CmbUsers.Text; // Use Text for editable support
             
             // Strip Suffix "(...)" if present
-            int parenIndex = rawSelection.IndexOf(" (");
+            // We need to be careful as suffix changes with language.
+            // Simplified logic: Just take everything before the first " (" if it exists.
+            int parenIndex = rawSelection.LastIndexOf(" (");
             if (parenIndex > 0)
             {
                 SelectedUsername = rawSelection.Substring(0, parenIndex);
@@ -66,7 +72,7 @@ namespace D2RMultiplay.UI.Views
 
             if (string.IsNullOrEmpty(SelectedUsername))
             {
-                MessageBox.Show(Title == "关联现有用户" ? "请输入或选择一个用户。" : "Please select or enter a user.", "Error");
+                MessageBox.Show(LocalizationManager.GetText("MsgSelectUser"), "Error");
                 return;
             }
 
