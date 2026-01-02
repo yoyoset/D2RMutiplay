@@ -1,0 +1,17 @@
+# AI Context Rules (.cursorrules)
+
+You are working on the D2Rmutiplay project.
+
+## Context Memory (上下文记忆)
+**CRITICAL**: The primary source of truth for this project is `docs/00_项目背景与上下文.md`. Always check this file for the latest project status and terminology.
+
+## Documentation Index
+- **Requirements**: `docs/01_产品需求文档_PRD.md`
+- **Architecture**: `docs/02_技术架构设计.md`
+- **Standards**: `docs/03_代码规范.md`
+- **Decisions**: `docs/04_架构决策记录_ADR.md`
+
+## Language Preferences
+- **Documentation**: Chinese (中文)
+- **Code Comments**: English
+- **Communication**: Chinese (中文) unless requested otherwise.

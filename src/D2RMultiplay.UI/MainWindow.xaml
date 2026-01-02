@@ -1,0 +1,178 @@
+﻿<Window x:Class="D2RMultiplay.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:D2RMultiplay.UI"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}" Height="750" Width="1000" Background="#FAFAFA"
+        Icon="app.ico">
+    
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="340"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Header -->
+            <RowDefinition Height="*"/>    <!-- Content -->
+            <RowDefinition Height="Auto"/> <!-- Status -->
+        </Grid.RowDefinitions>
+
+        <!-- Background Image (Watermark) -->
+        <Image Grid.RowSpan="3" Grid.ColumnSpan="2" Source="background.png" Stretch="UniformToFill" Opacity="0.15" IsHitTestVisible="False" Margin="-15"/>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15">
+            <!-- Language Dropdown -->
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                <TextBlock Text="{Binding LabelLanguage}" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="#555"/>
+                <ComboBox ItemsSource="{Binding AvailableLanguages}" SelectedItem="{Binding SelectedLanguage}" 
+                          Width="100" Height="25"/>
+            </StackPanel>
+            
+            <TextBlock Text="{Binding WindowTitle}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="#333"/>
+        </DockPanel>
+
+        <!-- LEFT PANEL: User Management & List -->
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4" Background="White" Margin="0,0,15,0" Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Manage Group -->
+                    <RowDefinition Height="*"/>    <!-- List -->
+                    <RowDefinition Height="Auto"/> <!-- Delete Button -->
+                </Grid.RowDefinitions>
+
+                <!-- Management Group -->
+                <GroupBox Header="{Binding GroupUserMgmt}" BorderBrush="#CCC" Foreground="#444" Margin="0,0,0,10">
+                    <StackPanel Margin="5">
+                        
+                        <!-- Buttons: Link / Create -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="{Binding BtnLinkExisting}" Command="{Binding LinkExistingUserCommand}" Height="30" Background="#F0F0F0"/>
+                            <Button Grid.Column="2" Content="{Binding BtnCreateNew}" Command="{Binding CreateNewUserCommand}" Height="30" Background="#F0F0F0"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding LabelInputUser}" FontWeight="Normal" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding InputUsername, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="#F9F9F9"/>
+
+                        <TextBlock Text="{Binding LabelInputPass}" FontWeight="Normal" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding InputPassword, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="#F9F9F9"/>
+
+                        <TextBlock Text="{Binding LabelInputBattleTag}" FontWeight="Normal" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding InputBattleTag, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="#F9F9F9"/>
+
+                        <TextBlock Text="{Binding LabelInputNote}" FontWeight="Normal" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding InputNote, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,10" Background="#F9F9F9"/>
+
+                         <!-- Save Button (Corrected to UpdateUserCommand) -->
+                         <Button Content="{Binding BtnUpdate}" Command="{Binding UpdateUserCommand}" Height="35" Margin="0,5,0,0" Background="#E0FFE0" FontSize="12" FontWeight="Bold"/>
+
+                         <!-- Delete System User Button (Danger Style) -->
+                         <Button Content="{Binding BtnDeleteSysUser}" Command="{Binding DeleteSystemUserCommand}" 
+                                 Height="35" Margin="0,10,0,0" Background="#FFEEEE" BorderBrush="Red" BorderThickness="1"
+                                 Foreground="#CC0000" FontSize="11" FontWeight="Bold" 
+                                 ToolTip="⚠️ CAUTION: Deletes Windows User &amp; Account Data"/>
+
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- List -->
+                <ListBox Grid.Row="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="DisplayName" BorderThickness="0" Background="#F5F5F5" Margin="0,5,0,5"/>
+                
+                <Button Grid.Row="2" Content="{Binding BtnDelete}" Command="{Binding DeleteCommand}" Height="30" Background="#F0F0F0" Margin="0,5,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- RIGHT PANEL: Launch & Manual -->
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4" Background="White" Padding="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Launch Ops -->
+                    <RowDefinition Height="Auto"/> <!-- Manual Tools -->
+                    <RowDefinition Height="*"/>    <!-- Spacer -->
+                    <RowDefinition Height="Auto"/> <!-- Launch Buttons -->
+                </Grid.RowDefinitions>
+
+                <!-- 1. Launch Ops -->
+                <GroupBox Header="{Binding GroupLaunchOps}" BorderBrush="#CCC" Foreground="#444" Margin="0,0,0,15">
+                     <StackPanel Margin="10">
+                         <TextBlock Text="{Binding LabelCurrentAccount}" FontWeight="Bold" Margin="0,0,0,5"/>
+                         
+                         <TextBlock Text="{Binding SelectedAccount.DisplayName, FallbackValue='(None)'}" 
+                                    FontSize="14" Foreground="#007ACC" Margin="0,0,0,10"/>
+
+                         <TextBlock Text="{Binding LabelGamePath}" Margin="0,0,0,2"/>
+                         <TextBox Text="{Binding SelectedAccount.GamePath}" IsReadOnly="True" Background="#F0F0F0" Height="25" Margin="0,0,0,5"/>
+                         
+                         <Grid Margin="0,0,0,5">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="10"/>
+                                 <ColumnDefinition Width="*"/>
+                             </Grid.ColumnDefinitions>
+                             <Button Grid.Column="0" Content="{Binding BtnPickPath}" Command="{Binding PickPathCommand}" Height="30"/>
+                             <Button Grid.Column="2" Content="{Binding BtnCreateMirror}" Command="{Binding CreateMirrorCommand}" Height="30"/>
+                         </Grid>
+
+                         <TextBlock Text="{Binding LabelPathHint}" FontSize="11" Foreground="#666" TextWrapping="Wrap" FontStyle="Italic"/>
+                     </StackPanel>
+                </GroupBox>
+
+                <!-- 2. Manual Tools -->
+                <GroupBox Grid.Row="1" Header="{Binding GroupManual}" BorderBrush="#CCC" Foreground="#444" Margin="0,0,0,10">
+                    <StackPanel Margin="5">
+                         <Grid Margin="0,0,0,5">
+                             <Grid.ColumnDefinitions>
+                                 <ColumnDefinition Width="*"/>
+                                 <ColumnDefinition Width="5"/>
+                                 <ColumnDefinition Width="*"/>
+                             </Grid.ColumnDefinitions>
+                             <Button Grid.Column="0" Content="{Binding BtnKillBnet}" Command="{Binding KillBnetCommand}" Height="35" Background="#FFE0E0"/>
+                             <Button Grid.Column="2" Content="{Binding BtnCleanConfig}" Command="{Binding CleanConfigCommand}" Height="35" Background="#FFF8DC"/>
+                         </Grid>
+                         <Button Content="{Binding BtnKillMutex}" Command="{Binding KillMutexCommand}" Height="35" Background="#E0F7FA"/>
+                         <!-- New Snapshot Button -->
+                         <Button Content="{Binding BtnSnapshotConfig}" Command="{Binding SnapshotConfigCommand}" 
+                                 Height="35" Margin="0,5,0,0" Background="#F0E6FA" 
+                                 ToolTip="Auto-Restore Config on next launch"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Launch Buttons -->
+                <StackPanel Grid.Row="3" VerticalAlignment="Bottom">
+                    <!-- Warning Box -->
+                    <Border Background="#FFF4E5" BorderBrush="#FFCC00" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10" Padding="8">
+                        <TextBlock Text="{Binding LabelManualLoginWarning}" TextWrapping="Wrap" FontSize="11" Foreground="#CC5500" FontWeight="SemiBold"/>
+                    </Border>
+
+                    <Button Content="{Binding BtnLaunchAuto}" Command="{Binding OneClickLaunchCommand}" 
+                            Height="60" FontSize="18" FontWeight="Bold" Background="#90EE90" Margin="0,0,0,10"/>
+                    
+                    <Button Content="{Binding BtnLaunchDirect}" Command="{Binding DirectLaunchCommand}" 
+                            Height="40" FontSize="12" Background="White" BorderBrush="#DDD" Foreground="#666"/>
+                    
+                    <!-- Launch Hint Removed -->
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Status -->
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0" Background="#EEE">
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="{Binding LabelCopyright}" Foreground="#999" FontSize="10" Margin="0,0,10,0"/>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right" Margin="0,0,15,0">
+                <TextBlock Text="{Binding LabelAdminStatus}" Foreground="{Binding ColorAdminStatus}" FontWeight="Bold"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage}" FontWeight="SemiBold" Foreground="#333"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

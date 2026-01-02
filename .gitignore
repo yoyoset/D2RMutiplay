@@ -1,0 +1,18 @@
+# Visual Studio standard ignore
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Project specific
+PublishOutput/
+PublishSelfContained/
+*.log
+*.txt
+!build_err.txt
+
+# Sensitive Data
+accounts.json
