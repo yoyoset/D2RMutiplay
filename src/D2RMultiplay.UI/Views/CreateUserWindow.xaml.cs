@@ -20,10 +20,10 @@ namespace D2RMultiplay.UI.Views
         {
             Title = LocalizationManager.GetText("CreateUserTitle");
             TitleText.Text = LocalizationManager.GetText("CreateUserTitle");
-            LabelUser.Text = LocalizationManager.GetText("LabelUser");
-            LabelPass.Text = LocalizationManager.GetText("LabelPassword");
-            LabelBattleTag.Text = LocalizationManager.GetText("LabelBattleTag");
-            LabelNote.Text = LocalizationManager.GetText("LabelNote");
+            LabelUser.Text = LocalizationManager.GetText("LabelInputUser");
+            LabelPass.Text = LocalizationManager.GetText("LabelInputPass");
+            LabelBattleTag.Text = LocalizationManager.GetText("LabelInputBattleTag");
+            LabelNote.Text = LocalizationManager.GetText("LabelInputNote");
             BtnCreate.Content = LocalizationManager.GetText("BtnCreate");
             BtnCancel.Content = LocalizationManager.GetText("BtnCancel");
         }

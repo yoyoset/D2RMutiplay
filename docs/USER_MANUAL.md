@@ -1,6 +1,6 @@
 # D2R Multiplay User Manual
 
-**Version**: v0.4.1
+**Version**: v0.5.3
 **Updated**: 2026-01-02
 
 ---

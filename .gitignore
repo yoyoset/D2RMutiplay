@@ -14,5 +14,9 @@ PublishSelfContained/
 *.txt
 !build_err.txt
 
+ReleaseOutput*/
+D2RMultiplay_v*/
+*.zip
+
 # Sensitive Data
 accounts.json

@@ -19,7 +19,7 @@ namespace D2RMultiplay.UI.Services
             // English (en-US)
             ["English"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R Multi-Open Tool (v0.5.0)",
+                ["WindowTitle"] = "D2R Multi-Open Tool (v0.5.3)",
                 ["LangButton"] = "Language",
                 ["GroupUserMgmt"] = "1. User & Mapping Management",
                 ["GroupLaunchOps"] = "2. Launch Operations",
@@ -64,6 +64,8 @@ namespace D2RMultiplay.UI.Services
                 ["MsgEnterPassword"] = "Please enter a password.",
                 ["MsgSelectUser"] = "Please select or enter a user.",
                 ["SuffixCurrent"] = " (Current)",
+                ["MsgUserCreatedBody"] = "User {0} Created!\n\n1. Log out & Log in as '{0}' once.\n2. Open Battle.net and log in once.",
+                ["TitleFirstRun"] = "First Run Setup",
                 // Donation
                 ["BtnSupport"] = "❤️ Donate & Boost Luck",
                 ["DonationTitle"] = "Activate 'Luck Patch': Support the Author!",
@@ -78,7 +80,7 @@ namespace D2RMultiplay.UI.Services
             // Simplified Chinese (zh-CN)
             ["简体中文"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 多开工具 (v0.5.0)",
+                ["WindowTitle"] = "D2R 多开工具 (v0.5.3)",
                 ["LangButton"] = "语言",
                 ["GroupUserMgmt"] = "1. Windows 用户与映射管理",
                 ["GroupLaunchOps"] = "2. 启动操作区",
@@ -123,6 +125,8 @@ namespace D2RMultiplay.UI.Services
                 ["MsgEnterPassword"] = "请输入密码。",
                 ["MsgSelectUser"] = "请输入或选择一个用户。",
                 ["SuffixCurrent"] = " (当前用户)",
+                ["MsgUserCreatedBody"] = "用户 {0} 创建成功！\n\n1. 请注销并切换到 '{0}' 登录一次（初始化环境）。\n2. 打开战网客户端并手动登录一次。",
+                ["TitleFirstRun"] = "首次运行设置",
                 // Donation
                 ["BtnSupport"] = "❤️ 赞助 & 攒人品",
                 ["DonationTitle"] = "开启 “人品补丁”：赞助作者，玄学出奇迹！",
@@ -137,7 +141,7 @@ namespace D2RMultiplay.UI.Services
             // Traditional Chinese (zh-TW)
             ["繁體中文"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 多開工具 (v0.5.0)",
+                ["WindowTitle"] = "D2R 多開工具 (v0.5.3)",
                 ["LangButton"] = "語言",
                 ["GroupUserMgmt"] = "1. Windows 使用者與映射管理",
                 ["GroupLaunchOps"] = "2. 啟動操作區",
@@ -182,6 +186,8 @@ namespace D2RMultiplay.UI.Services
                 ["MsgEnterPassword"] = "請輸入密碼。",
                 ["MsgSelectUser"] = "請選擇或輸入使用者。",
                 ["SuffixCurrent"] = " (目前使用者)",
+                ["MsgUserCreatedBody"] = "使用者 {0} 建立成功！\n\n1. 請登出並切換到 '{0}' 登入一次（初始化環境）。\n2. 開啟 Battle.net 並手動登入一次。",
+                ["TitleFirstRun"] = "首次執行設定",
                 // Donation
                 ["BtnSupport"] = "❤️ 贊助 & 攢人品",
                 ["DonationTitle"] = "開啟 “人品補丁”：贊助作者，玄學出奇蹟！",
@@ -196,7 +202,7 @@ namespace D2RMultiplay.UI.Services
             // Japanese (ja-JP)
             ["日本語"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 多重起動ツール (v0.5.0)",
+                ["WindowTitle"] = "D2R 多重起動ツール (v0.5.3)",
                 ["LangButton"] = "言語",
                 ["GroupUserMgmt"] = "1. ユーザー＆マッピング管理",
                 ["GroupLaunchOps"] = "2. 起動オプション",
@@ -241,6 +247,8 @@ namespace D2RMultiplay.UI.Services
                 ["MsgEnterPassword"] = "パスワードを入力してください。",
                 ["MsgSelectUser"] = "ユーザーを選択または入力してください。",
                 ["SuffixCurrent"] = " (現在)",
+                ["MsgUserCreatedBody"] = "ユーザー {0} を作成しました！\n\n1. 一度ログアウトし、'{0}' としてログインしてください。\n2. Battle.netを開き、一度ログインしてください。",
+                ["TitleFirstRun"] = "初回セットアップ",
                 // Donation
                 ["BtnSupport"] = "❤️ 寄付 & 運気アップ",
                 ["DonationTitle"] = "「ラックパッチ」を有効化：作者をサポート！",
@@ -255,7 +263,7 @@ namespace D2RMultiplay.UI.Services
             // Korean (ko-KR)
             ["한국어"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 다중 실행 도구 (v0.5.0)",
+                ["WindowTitle"] = "D2R 다중 실행 도구 (v0.5.3)",
                 ["LangButton"] = "언어",
                 ["GroupUserMgmt"] = "1. 사용자 및 매핑 관리",
                 ["GroupLaunchOps"] = "2. 실행 작업",
@@ -300,6 +308,8 @@ namespace D2RMultiplay.UI.Services
                 ["MsgEnterPassword"] = "비밀번호를 입력하세요.",
                 ["MsgSelectUser"] = "사용자를 선택하거나 입력하세요.",
                 ["SuffixCurrent"] = " (현재)",
+                ["MsgUserCreatedBody"] = "사용자 {0} 생성됨!\n\n1. 로그아웃 후 '{0}'(으)로 한 번 로그인하십시오.\n2. 배틀넷을 열고 한 번 로그인하십시오.",
+                ["TitleFirstRun"] = "최초 실행 설정",
                 // Donation
                 ["BtnSupport"] = "❤️ 후원 & 행운 상승",
                 ["DonationTitle"] = "'행운 패치' 활성화: 제작자 후원!",

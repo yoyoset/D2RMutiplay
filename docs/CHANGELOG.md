@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.3 (2026-01-04) - Documentation & Localization
+### Added
+- **UI Guide**: Added detailed visual interface guide to README (Bilingual).
+- **Localization**: Added missing localization for "User Created" success popup.
+- **Localization**: Fixed "Create Windows User" window labels not translating correctly.
+
+### Changed
+- **Documentation**: Refactored README to split Chinese and English content into distinct sections.
+- **Documentation**: Updated "Game Path" explanation to clarify Virtual vs Real path behavior in taskbar.
+- **Project**: Updated release version info.
+
 ## v0.5.2 (2026-01-02) - Dark Mode & UI Refinement
 
 ### Features

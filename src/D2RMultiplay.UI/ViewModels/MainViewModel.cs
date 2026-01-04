@@ -291,8 +291,8 @@ namespace D2RMultiplay.UI.ViewModels
                     Accounts.Add(newAccount);
                     SaveAccounts(null);
 
-                    string msg = $"User {user} Created!\n\n1. Log out & Log in as '{user}' once.\n2. Open Battle.net and log in once.";
-                    MessageBox.Show(msg, "First Run Setup");
+                    string msg = string.Format(LocalizationManager.GetText("MsgUserCreatedBody"), user);
+                    MessageBox.Show(msg, LocalizationManager.GetText("TitleFirstRun"));
                     StatusMessage = $"User {user} created.";
                     SelectedAccount = newAccount;
                 }
