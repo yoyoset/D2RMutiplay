@@ -20,6 +20,22 @@ D2R 自动化多开与免验证登录工具。
 - **暗黑模式**: 支持深色主题 (Dark Theme)，护眼且更沉浸。
 - **多语言**: 界面支持中英文切换。
 
+## ⚠️ 技术限制 (必读)
+
+为了保证多开功能的稳固运行，本程序有以下严格的技术限制：
+
+1.  **战网路径 (Battle.net Path)**
+    *   **必须** 安装在默认路径：`C:\Program Files (x86)\Battle.net\`。
+    *   程序目前硬编码了此路径，不支持自定义战网位置。如果未能在该位置找到战网，程序将报错。
+
+2.  **安装权限 (Installation Scope)**
+    *   安装战网时，**必须** 确保它是为“**所有用户 (All Users)**”安装的（通常是默认选项）。
+    *   **严禁** 选择“仅为当前用户安装”或安装在 `AppData` 等个人目录下。
+    *   **原理**：程序创建的隔离子账号（Ghost User）必须有权限读取战网的核心文件。如果战网安装在您的个人隐私目录下，子账号将因权限不足（Access Denied）而无法启动，导致多开失败。
+
+3.  **配置隔离 (Config Isolation)**
+    *   程序依赖于切换 `ProgramData` 下的共享配置文件 (`product.db`) 来实现账号隔离。非标准安装可能导致此机制失效。
+
 ## 📖 界面指南
 
 ![Interface Mockup](docs/images/interface_mockup.png)
@@ -77,6 +93,22 @@ Built on **Windows Native User Isolation**. No memory injection or file modifica
 ### 3. User Experience
 - **One-Click**: Set up login and directory once. Seamless one-click launch thereafter.
 - **Dark Mode**: Native dark theme support.
+
+## ⚠️ Technical Constraints (Read Carefully)
+
+To ensure stable multi-boxing, this tool has strict technical requirements:
+
+1.  **Battle.net Path**
+    *   **MUST** be installed in the default location: `C:\Program Files (x86)\Battle.net\`.
+    *   The tool currently hardcodes this path. Custom Battle.net locations are not supported and will cause errors.
+
+2.  **Installation Scope**
+    *   Battle.net **MUST** be installed for "**All Users**" (usually the default).
+    *   **DO NOT** install for "Current User Only" or in private directories like `AppData`.
+    *   **Reason**: The isolated sub-accounts (Ghost Users) created by this tool need read permissions for Battle.net core files. If installed in a private directory, sub-accounts will be denied access, causing launch failures.
+
+3.  **Config Isolation**
+    *   The tool relies on swapping the shared configuration file (`product.db`) in `ProgramData` to achieve account isolation. Non-standard installations may break this mechanism.
 
 ## 📖 Interface Guide
 
