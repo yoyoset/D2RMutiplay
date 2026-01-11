@@ -2,7 +2,7 @@
 
 [ 简体中文 ](#cn) | [ English ](#en)
 
-# D2RMultiplay v0.5.3
+# D2RMultiplay v0.5.4
 
 D2R 自动化多开与免验证登录工具。
 
@@ -56,9 +56,9 @@ D2R 自动化多开与免验证登录工具。
 
 | 版本 | 说明 |
 | :--- | :--- |
-| **D2RMultiplay_v0.5.3_Green.zip** | **推荐**。解压即用，启动最快，兼容性最好。 |
-| **D2RMultiplay_v0.5.3_Portable.zip** | 单文件版。只有一个 EXE，启动略慢（需释放临时环境）。 |
-| **D2RMultiplay_v0.5.3.zip** | 依赖版。体积最小，需自行安装 .NET 10。 |
+| **D2RMultiplay_v0.5.4_Green.zip** | **推荐**。解压即用，启动最快，兼容性最好。 |
+| **D2RMultiplay_v0.5.4_Portable.zip** | 单文件版。只有一个 EXE，启动略慢（需释放临时环境）。 |
+| **D2RMultiplay_v0.5.4.zip** | 依赖版。体积最小，需自行安装 .NET 10。 |
 
 ## 💡 提示与免责
 

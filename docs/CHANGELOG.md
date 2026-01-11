@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.4 (2026-01-11) - Process Cleanup
+### Fixed
+- **Isolation Engine**: Added `crashpad_handler.exe` to the process cleanup list to prevent accumulation of zombie processes that may hinder game launching.
+
 ## v0.5.3 (2026-01-04) - Documentation & Localization
 ### Added
 - **UI Guide**: Added detailed visual interface guide to README (Bilingual).

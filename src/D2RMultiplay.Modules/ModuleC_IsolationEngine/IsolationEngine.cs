@@ -60,6 +60,7 @@ namespace D2RMultiplay.Modules.ModuleC_IsolationEngine
             Console.WriteLine("[IsolationEngine] Killing Battle.net and Agent processes...");
             KillProcess("Battle.net");
             KillProcess("Agent");
+            KillProcess("crashpad_handler");
         }
 
         private void KillProcess(string name)
