@@ -110,6 +110,7 @@ namespace D2RMultiplay.UI.ViewModels
         
         public string LabelInputUser => LocalizationManager.GetText("LabelInputUser", _selectedLanguage);
         public string LabelInputPass => LocalizationManager.GetText("LabelInputPass", _selectedLanguage);
+        public string HintNoPassword => LocalizationManager.GetText("HintNoPassword", _selectedLanguage);
         public string LabelInputBattleTag => LocalizationManager.GetText("LabelInputBattleTag", _selectedLanguage);
         public string LabelInputNote => LocalizationManager.GetText("LabelInputNote", _selectedLanguage);
         

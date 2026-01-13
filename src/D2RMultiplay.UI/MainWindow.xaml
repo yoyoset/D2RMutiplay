@@ -98,7 +98,8 @@
                         <TextBox Text="{Binding InputUsername, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
 
                         <TextBlock Text="{Binding LabelInputPass}" FontWeight="Normal" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
-                        <TextBox Text="{Binding InputPassword, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
+                        <TextBox Text="{Binding InputPassword, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,2" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
+                        <TextBlock Text="{Binding HintNoPassword}" FontSize="10" Foreground="{DynamicResource LinkText}" Margin="0,0,0,8" TextWrapping="Wrap"/>
 
                         <TextBlock Text="{Binding LabelInputBattleTag}" FontWeight="Normal" Margin="0,0,0,2" Foreground="{DynamicResource PrimaryText}"/>
                         <TextBox Text="{Binding InputBattleTag, UpdateSourceTrigger=PropertyChanged}" Height="25" Margin="0,0,0,8" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource InputText}"/>
