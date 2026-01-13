@@ -19,7 +19,7 @@ namespace D2RMultiplay.UI.Services
             // English (en-US)
             ["English"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R Multi-Open Tool (v0.5.3)",
+                ["WindowTitle"] = "D2R Multiplay",
                 ["LangButton"] = "Language",
                 ["GroupUserMgmt"] = "1. User & Mapping Management",
                 ["GroupLaunchOps"] = "2. Launch Operations",
@@ -80,7 +80,7 @@ namespace D2RMultiplay.UI.Services
             // Simplified Chinese (zh-CN)
             ["简体中文"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 多开工具 (v0.5.3)",
+                ["WindowTitle"] = "D2R 多开工具",
                 ["LangButton"] = "语言",
                 ["GroupUserMgmt"] = "1. Windows 用户与映射管理",
                 ["GroupLaunchOps"] = "2. 启动操作区",
@@ -141,7 +141,7 @@ namespace D2RMultiplay.UI.Services
             // Traditional Chinese (zh-TW)
             ["繁體中文"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 多開工具 (v0.5.3)",
+                ["WindowTitle"] = "D2R 多開工具",
                 ["LangButton"] = "語言",
                 ["GroupUserMgmt"] = "1. Windows 使用者與映射管理",
                 ["GroupLaunchOps"] = "2. 啟動操作區",
@@ -202,7 +202,7 @@ namespace D2RMultiplay.UI.Services
             // Japanese (ja-JP)
             ["日本語"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 多重起動ツール (v0.5.3)",
+                ["WindowTitle"] = "D2R 多重起動ツール",
                 ["LangButton"] = "言語",
                 ["GroupUserMgmt"] = "1. ユーザー＆マッピング管理",
                 ["GroupLaunchOps"] = "2. 起動オプション",
@@ -263,7 +263,7 @@ namespace D2RMultiplay.UI.Services
             // Korean (ko-KR)
             ["한국어"] = new Dictionary<string, string>
             {
-                ["WindowTitle"] = "D2R 다중 실행 도구 (v0.5.3)",
+                ["WindowTitle"] = "D2R 다중 실행 도구",
                 ["LangButton"] = "언어",
                 ["GroupUserMgmt"] = "1. 사용자 및 매핑 관리",
                 ["GroupLaunchOps"] = "2. 실행 작업",

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 using D2RMultiplay.UI.Services;
 
 namespace D2RMultiplay.UI.Views

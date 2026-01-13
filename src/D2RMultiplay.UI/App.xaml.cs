@@ -1,6 +1,8 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
+using Application = System.Windows.Application;
 
 namespace D2RMultiplay.UI;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 using System.Windows.Navigation;
 using D2RMultiplay.UI.Services;
 using System.IO;

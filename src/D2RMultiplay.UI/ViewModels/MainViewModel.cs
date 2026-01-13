@@ -12,6 +12,12 @@ using Microsoft.Win32; // For OpenFileDialog
 using D2RMultiplay.Core.Models;
 using D2RMultiplay.Core.Interfaces;
 using System.Security.Principal;
+using MessageBox = System.Windows.MessageBox;
+using Application = System.Windows.Application;
+using Brush = System.Windows.Media.Brush; // Resolve ambiguity with System.Drawing
+using Brushes = System.Windows.Media.Brushes; // Resolve ambiguity
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog; // Resolve ambiguity
+using Path = System.IO.Path;
 using D2RMultiplay.Modules.ModuleA_AccountManager;
 using D2RMultiplay.Modules.ModuleC_IsolationEngine;
 using D2RMultiplay.UI.Utilities;
@@ -127,6 +133,7 @@ namespace D2RMultiplay.UI.ViewModels
         public bool IsAdmin => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public string LabelCopyright => "By SquareUncle & Antigravity";
+        public string AppVersion => $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}";
 
         public string BtnLaunchAuto => LocalizationManager.GetText("BtnLaunchAuto", _selectedLanguage);
         public string BtnLaunchDirect => LocalizationManager.GetText("BtnLaunchDirect", _selectedLanguage);
@@ -495,7 +502,8 @@ namespace D2RMultiplay.UI.ViewModels
             if (dialog.ShowDialog() != true) return;
 
             string sourcePath = dialog.FileName;
-            string sourceDir = Path.GetDirectoryName(sourcePath);
+            string? sourceDir = Path.GetDirectoryName(sourcePath);
+            if (string.IsNullOrEmpty(sourceDir)) return;
             string exeName = Path.GetFileName(sourcePath);
             string safeUsername = SelectedAccount.Username;
             foreach (char c in Path.GetInvalidFileNameChars()) safeUsername = safeUsername.Replace(c, '_');

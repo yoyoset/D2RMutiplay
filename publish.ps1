@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 $ProgressPreference = 'SilentlyContinue'
 
-$version = "v0.5.4"
+$version = "v0.5.5"
 $outputDir = "ReleaseOutput"
 
 # 1. Clean

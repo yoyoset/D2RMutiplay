@@ -77,16 +77,21 @@ D2R 自动化多开与免验证登录工具。
 
 [ 简体中文 ](#cn) | [ English ](#en)
 
-# D2RMultiplay (English)
+# D2R Multiplay Tool (v0.5.5)
 
-Automated multi-boxing and verification-free login tool for D2R.
+Simplest D2R Multi-Opening Tool | Lightweight & Open Source | Safe Process Isolation
 
-## 🚀 Core Solutions
+[简体中文](README.md) | [English](README_EN.md)
 
-### 1. Persistent Login & Auth Bypass
-Built on **Windows Native User Isolation**. No memory injection or file modification. Stable, verification-free login for multiple accounts.
+## Core Features
 
-### 2. D2R Multi-boxing Logic
+- **Minimize to System Tray**: Hide window to tray, double-click to restore. (New!)
+- **True Process Isolation**: Each game instance runs with independent environment variables, preferences, and permissions.
+- **One-Click Launch**: Automates switching Windows users and launching Battle.net.
+- **No Virtual Machines**: Uses native Windows `CreateProcessWithLogonW` API.
+- **Safe & Clean**: No modifications to game memory, no DLL injection. 100% legal.
+- **Handle Killer**: Automatically closes "Check for Other Instances" handle (Mutex).
+- **Config Snapshot**: Automatically backups and restores `product.db` for auto-login.
 - **Mutex**: Automatically cleared via low-level C# API.
 - **Directory**: Single-path multi-boxing via automated workflow: **Snapshot config ➔ Close Bnet ➔ Kill Mutex ➔ Restore config**.
 
