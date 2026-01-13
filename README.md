@@ -2,7 +2,7 @@
 
 [ 简体中文 ](#cn) | [ English ](#en)
 
-# D2RMultiplay v0.5.4
+# D2RMultiplay v0.5.5
 
 D2R 自动化多开与免验证登录工具。
 
@@ -56,9 +56,9 @@ D2R 自动化多开与免验证登录工具。
 
 | 版本 | 说明 |
 | :--- | :--- |
-| **D2RMultiplay_v0.5.4_Green.zip** | **推荐**。解压即用，启动最快，兼容性最好。 |
-| **D2RMultiplay_v0.5.4_Portable.zip** | 单文件版。只有一个 EXE，启动略慢（需释放临时环境）。 |
-| **D2RMultiplay_v0.5.4.zip** | 依赖版。体积最小，需自行安装 .NET 10。 |
+| **D2RMultiplay_v0.5.5_Green.zip** | **推荐**。绿色版，解压即用，启动速度最快。 |
+| **D2RMultiplay_v0.5.5_Portable.zip** | 单文件版。只有一个 EXE，启动时需释放临时文件（稍慢）。 |
+| **D2RMultiplay_v0.5.5.zip** | 依赖版。体积最小，但需要您自行安装 .NET 10 运行库。 |
 
 ## 💡 提示与免责
 
@@ -135,9 +135,9 @@ To ensure stable multi-boxing, this tool has strict technical requirements:
 
 | Version | Description |
 | :--- | :--- |
-| **D2RMultiplay_v0.5.3_Green.zip** | **Recommended**. Ready to run, fastest launch, best compatibility. |
-| **D2RMultiplay_v0.5.3_Portable.zip** | Single-file version. Slower startup (needs to extract runtime). |
-| **D2RMultiplay_v0.5.3.zip** | Dependent version. Smallest size, requires .NET 10 installed. |
+| **D2RMultiplay_v0.5.5_Green.zip** | **Recommended**. Folder-based, fast launch. |
+| **D2RMultiplay_v0.5.5_Portable.zip** | Single-file executable (Self-contained). |
+| **D2RMultiplay_v0.5.5.zip** | Dependent version (Requires .NET 10). |
 
 ## 💡 Tips & Disclaimer
 
