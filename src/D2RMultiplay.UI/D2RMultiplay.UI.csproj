@@ -27,9 +27,6 @@
 
   <ItemGroup>
     <Resource Include="app.ico" />
-    <Content Include="app.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="background.png" />
     <Resource Include="Assets\Images\*.png" />
     <Resource Include="Assets\Images\*.jpg" />

@@ -30,7 +30,7 @@ public partial class MainWindow : Window
     {
         _notifyIcon = new System.Windows.Forms.NotifyIcon
         {
-            Icon = new System.Drawing.Icon("app.ico"),
+            Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/app.ico")).Stream),
             Visible = false,
             Text = "D2R Multiplay"
         };
