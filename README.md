@@ -154,3 +154,15 @@ If you find this tool helpful, consider buying me a coffee!
 
 **GitHub:** [https://github.com/yoyoset/D2RMutiplay](https://github.com/yoyoset/D2RMutiplay)
 
+
+
+
+## 📺 Tutorials (视频教程)
+
+*   **Process Demo**: [Watch on Bilibili (演示过程)](https://www.bilibili.com/video/BV11nvxBqEvF/)
+*   **Explanation**: [Watch on Bilibili (详细说明)](https://www.bilibili.com/video/BV1VJibBfELR/)
+
+## ☁️ Mirror Download (网盘下载)
+
+*   **Baidu Netdisk (百度网盘)**: [Download Link (下载链接)](https://pan.baidu.com/s/1B5p0vtSWvCQBEwn4UxfHaw?pwd=6yir)
+    *   *Password (提取码)*: `6yir`
