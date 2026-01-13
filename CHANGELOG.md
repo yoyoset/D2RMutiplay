@@ -32,12 +32,13 @@ All notable changes to **D2RMultiplay** will be documented in this file.
   - **代码稳定性**：修复了命名空间冲突，并优化了托盘图标的资源释放逻辑。
 
 ## [v0.5.4] - 2026-01-12
-## [v0.5.4] - 2026-01-12
-### 🧹 Stability (稳定性)
-- **Zombie Process Cleanup**: Implemented advanced logic to detect and clear "Zombie Processes" (stale D2R Mutex handles).
-  - **清理僵尸进程**：实现了检测并清理“僵尸进程”（残留的 D2R Mutex 句柄）的高级逻辑。
-- **Handle Killer**: Enhanced the `HandleKiller` module to ensure game instances can launch even if a previous session didn't exit cleanly.
-  - **句柄清理**：增强了 `HandleKiller` 模块，确保即使上一局游戏未正常退出，也能顺利启动新实例。
+### 🛠 Fixes & Improvements (修复与改进)
+- **Automatic Crashpad Cleanup**: Added `crashpad_handler.exe` to the automatic process cleanup list.
+  - **自动清理 Crashpad**：将 `crashpad_handler.exe` 加入了自动清理列表。
+- **Issue**: Previously, `crashpad_handler.exe` processes would accumulate as "zombie processes", causing Battle.net Agent to refuse starting.
+  - **问题**：此前，`crashpad_handler.exe`（战网崩溃报告工具）可能会残留为僵尸进程，导致战网代理无法启动。
+- **Fix**: The Isolation Engine now forcefully terminates `crashpad_handler.exe` alongside Battle.net/Agent during launch, ensuring a clean environment.
+  - **修复**：隔离引擎现在会在“一键启动”时强制终结该进程，确保环境彻底干净。
 
 ## [v0.5.3] - 2026-01-12
 ### 📖 Documentation (文档)
