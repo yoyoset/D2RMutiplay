@@ -96,6 +96,7 @@ namespace D2RMultiplay.UI.ViewModels
                     UpdateAllLocalization();
                     // Auto status update on switch
                     StatusMessage = LocalizationManager.GetText("StatusReady", _selectedLanguage);
+                    SaveSettings(); // Auto-save language choice
                 }
             }
         }
@@ -556,23 +557,59 @@ namespace D2RMultiplay.UI.ViewModels
                 var userToDelete = InputUsername;
                 if (string.IsNullOrWhiteSpace(userToDelete)) return;
 
-                if (MessageBox.Show(
-                    $"WARNING! Irreversible Action:\nPermanently deleting user '{userToDelete}'",
-                    "High Risk Confirmation",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Stop) == MessageBoxResult.Yes) 
+                // SAFETY CHECK 1: Prevent deleting current user
+                if (userToDelete.Equals(Environment.UserName, StringComparison.OrdinalIgnoreCase))
                 {
-                     _userManager.DeleteUser(userToDelete);
-                     var acc = Accounts.FirstOrDefault(a => a.Username.Equals(userToDelete, StringComparison.OrdinalIgnoreCase));
-                     if (acc != null)
-                     {
-                         Accounts.Remove(acc);
-                         if (SelectedAccount == acc) SelectedAccount = null;
-                         SaveAccounts();
-                     }
-                     StatusMessage = $"User {userToDelete} deleted.";
-                     MessageBox.Show(StatusMessage, "Success");
+                    MessageBox.Show(
+                        $"Operation BLOCKED: Cannot delete the currently logged-in user '{userToDelete}'.",
+                        "Safety Block",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
                 }
+
+                bool isAdmin = false;
+                try {
+                     // Check if user is in Admin group using PrincipalContext or check against well-known SIDs
+                     // Simplified check: if it's "Administrator" or similar. 
+                     // For robust check, we'd need DirectoryEntry but sticking to basic logic for now or just treat all deletions as high risk.
+                     // Let's rely on the Double Confirmation for ALL deletions that are not the current user, or specifically flag if possible.
+                     // Given the user request: "Delete Admin user needs strong confirmation". 
+                     // We will implement Double Confirmation for *ALL* system user deletions to be safe, as checking "IsAdmin" for another user locally is complex without AD references.
+                     isAdmin = true; // Treat all deletions as high risk requiring double confirmation as per request "Delete Admin needs verify".
+                } catch { }
+
+                // CONFIRMATION 1
+                if (MessageBox.Show(
+                    $"WARNING! Irreversible Action:\nPermanently deleting Windows user '{userToDelete}' and their data.\n\nAre you sure?",
+                    "Delete User Confirmation (1/2)",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning) != MessageBoxResult.Yes) 
+                {
+                    return;
+                }
+
+                // SAFETY CHECK 2: Secondary Confirmation for critical action
+                if (MessageBox.Show(
+                    $"FINAL WARNING:\n\nYou are about to DELETE user '{userToDelete}'.\nThis cannot be undone.\n\nType 'Yes' to confirm? (Just kidding, click Yes).",
+                    "Final Confirmation (2/2)",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Stop,
+                    MessageBoxResult.No) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                _userManager.DeleteUser(userToDelete);
+                var acc = Accounts.FirstOrDefault(a => a.Username.Equals(userToDelete, StringComparison.OrdinalIgnoreCase));
+                if (acc != null)
+                {
+                    Accounts.Remove(acc);
+                    if (SelectedAccount == acc) SelectedAccount = null;
+                    SaveAccounts();
+                }
+                StatusMessage = $"User {userToDelete} deleted.";
+                MessageBox.Show(StatusMessage, "Success");
             }
             catch(Exception ex) { PositionError(ex); }
         }
@@ -581,6 +618,7 @@ namespace D2RMultiplay.UI.ViewModels
         {
             public string LastLaunchedUsername { get; set; } = "";
             public string Theme { get; set; } = "Dark"; // Default to Dark
+            public string Language { get; set; } = "English";
         }
         
         private AppSettings _settings = new AppSettings();
@@ -596,12 +634,20 @@ namespace D2RMultiplay.UI.ViewModels
             // Apply Saved Theme
             ThemeManager.ApplyTheme(_settings.Theme);
             CurrentTheme = _settings.Theme;
+
+            // Apply Saved Language
+            // Note: Since _selectedLanguage initializes to "English", we need to force an update if saved is different
+            if (_selectedLanguage != _settings.Language)
+            {
+                SelectedLanguage = _settings.Language;
+            }
         }
 
         private void SaveSettings()
         {
             try {
-                _settings.Theme = CurrentTheme; // Sync before save
+                _settings.Theme = CurrentTheme; 
+                _settings.Language = SelectedLanguage;
                 File.WriteAllText(SETTINGS_FILE, JsonSerializer.Serialize(_settings));
             } catch {}
         }
