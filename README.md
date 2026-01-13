@@ -48,6 +48,7 @@ D2R 自动化多开与免验证登录工具。
 ### 关键字段
 - **Windows User**: **系统账号**。工具依赖 Windows 原生多用户机制来实现隔离。你需要为每个游戏账号创建一个对应的 Windows 账号。
 - **Password**: **账号密码**。用于工具自动创建 Windows 账号或进行登录切换。密码仅加密存储在本地 `accounts.json` 中。
+    *   **提示**: 当前登录的 Windows 用户（Current User）**无需**填写密码。
 - **Game Path**: **游戏路径**。指定 `D2R.exe` 的位置。这里只是作为备注，没有任何实际意义，就是怕你忘了这个账户用的是什么路径的游戏。你也可以使用 "Mirror" 功能为每个账号创建虚拟路径。虚拟路径和真实路径的区别就是虚拟路径会让你所有的窗口都汇集在任务栏的一个窗口图标下面，真实路径会让你的窗口分散在任务栏的多个图标下面，你可以自主拉动窗口到你想要的顺序。
 - **BattleTag**: **战网昵称**。仅作为列表显示的备注，方便你区分账号。
 - **One-Click Launch**: **一键启动**。执行标准流程：**备份当前配置 -> 清理战网进程 -> 还原目标配置 -> 启动游戏**。
@@ -127,6 +128,7 @@ To ensure stable multi-boxing, this tool has strict technical requirements:
 ### Key Fields
 - **Windows User**: **System Account**. The tool relies on Windows native multi-user mechanism for isolation. You need one Windows user per game account.
 - **Password**: **Account Password**. Used for auto-creation or login switching. Stored encrypted locally in `accounts.json`.
+    *   **Note**: No password required for the **Current Windows User**.
 - **Game Path**: **Game Path**. Location of `D2R.exe`. This is primarily a reference note to remind you which path this account uses. You can also use the "Mirror" function to create virtual paths. **Difference**: "Virtual Paths" group all windows under one taskbar icon, while "Real Paths" separate windows into individual icons, allowing you to rearrange window order manually.
 - **BattleTag**: **BattleTag**. Display remark only, helping you identify accounts in the list.
 - **One-Click Launch**: **Standard Workflow**: Backup config -> Clean processes -> Restore target config -> Launch game.

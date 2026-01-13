@@ -15,6 +15,8 @@ All notable changes to **D2RMultiplay** will be documented in this file.
   - **语言记忆**：程序现在会将选择的语言保存到 `settings.json`，并在启动时自动加载。
 - **Settings**: Introduced `settings.json` for persisting user preferences (Theme, Language).
   - **配置文件**：引入 `settings.json` 用于持久化保存用户偏好（主题、语言）。
+- **Password Hint**: Added a hint below the password input box ("No password required for Current User").
+  - **密码提示**：在密码输入框下方增加了提示：“当前登录的 Windows 用户无需填写密码”。
 
 ## [v0.5.5] - 2026-01-13
 ### 🟢 New Features (新功能)

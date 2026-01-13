@@ -22,6 +22,9 @@ This update focuses on user safety and improved usability based on community fee
 *   **Language Persistence (语言设置记忆)**:
     *   The application now remembers your language selection (`English` / `简体中文`) across restarts.
     *   **自动记忆语言**：无需每次启动都手动切换语言了，程序会自动保存并加载您上次选择的语言设置。
+*   **Password Hint (密码提示)**:
+    *   Added a hint below the password box: "No password required for Current User".
+    *   **密码提示**：在密码输入框下方增加了提示：“当前登录的 Windows 用户无需填写密码”。
 
 ---
 
