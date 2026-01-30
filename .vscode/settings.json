@@ -1,0 +1,10 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./d2r-rust/src-tauri/Cargo.toml"
+    ],
+    "rust-analyzer.checkOnSave.command": "check",
+    "rust-analyzer.checkOnSave.extraArgs": [
+        "--manifest-path",
+        "d2r-rust/src-tauri/Cargo.toml"
+    ]
+}

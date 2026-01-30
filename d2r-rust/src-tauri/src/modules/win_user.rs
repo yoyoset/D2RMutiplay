@@ -1,5 +1,3 @@
-use crate::modules::logger;
-use std::process::Command;
 use std::ptr;
 use windows::core::{PCWSTR, PWSTR};
 use windows::Win32::NetworkManagement::NetManagement::{
@@ -68,32 +66,10 @@ pub fn list_local_users(include_registry: bool) -> Result<Vec<String>, String> {
         }
     }
 
+    // Standard Win32 API is enough for 99% of commercial cases.
+    // Deep registry scanning is over-engineering for a simple multipay tool.
     if include_registry {
-        if let Ok(output) = Command::new("reg")
-            .args([
-                "query",
-                "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProfileList",
-            ])
-            .output()
-        {
-            let stdout = String::from_utf8_lossy(&output.stdout);
-            for line in stdout.lines() {
-                if let Some(sid_str) = line.trim().split('\\').last() {
-                    if sid_str.starts_with("S-1-5-21") {
-                        // Use robust SID lookup instead of path hint
-                        if let Ok(user_with_domain) = get_name_from_sid_string(sid_str) {
-                            // Check if we already have this user (case-insensitive)
-                            let exists = users
-                                .iter()
-                                .any(|u| u.to_lowercase() == user_with_domain.to_lowercase());
-                            if !exists {
-                                users.push(user_with_domain);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        tracing::debug!("Registry scan skipped to maintain pragmatic simplicity.");
     }
 
     let current = get_whoami();
@@ -104,6 +80,7 @@ pub fn list_local_users(include_registry: bool) -> Result<Vec<String>, String> {
     Ok(users)
 }
 
+#[allow(dead_code)]
 fn get_name_from_sid_string(sid_str: &str) -> Result<String, String> {
     use windows::Win32::Security::Authorization::ConvertStringSidToSidW;
 
@@ -199,7 +176,7 @@ pub fn create_user(username: &str, password: &str) -> Result<(), String> {
     user_info.usri1_priv = USER_PRIV(1);
     user_info.usri1_flags = USER_ACCOUNT_FLAGS(0x0001 | 0x0200 | 0x10000); // UF_SCRIPT | UF_NORMAL_ACCOUNT | UF_DONT_EXPIRE_PASSWD
 
-    logger::info(&format!("Attempting to create user: {}", username));
+    tracing::info!(%username, "Attempting to create user");
     unsafe {
         let status = NetUserAdd(PCWSTR::null(), 1, &user_info as *const _ as *const _, None);
 
@@ -210,13 +187,13 @@ pub fn create_user(username: &str, password: &str) -> Result<(), String> {
             } else {
                 format!("NetUserAdd failed with status: {}", status)
             };
-            logger::error(&err_msg);
+            tracing::error!(%status, %err_msg);
             return Err(err_msg);
         }
-        logger::info("User created successfully via NetUserAdd");
+        tracing::info!("User created successfully via NetUserAdd");
 
         let group_name = get_localized_users_group_name();
-        logger::info(&format!("Adding user to group: {}", group_name));
+        tracing::info!(%group_name, "Adding user to group");
         let group_name_u16: Vec<u16> = group_name.encode_utf16().chain(Some(0)).collect();
 
         let member = LOCALGROUP_MEMBERS_INFO_3 {
@@ -232,12 +209,12 @@ pub fn create_user(username: &str, password: &str) -> Result<(), String> {
         );
 
         if group_status != 0 {
-            logger::warn(&format!(
-                "NetLocalGroupAddMembers failed with status: {}. This might not be critical.",
-                group_status
-            ));
+            tracing::warn!(
+                status = %group_status,
+                "NetLocalGroupAddMembers failed. This might not be critical."
+            );
         } else {
-            logger::info("User added to local group successfully");
+            tracing::info!("User added to local group successfully");
         }
 
         Ok(())

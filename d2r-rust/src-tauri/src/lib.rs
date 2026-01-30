@@ -68,9 +68,13 @@ fn get_windows_users(deep_scan: Option<bool>) -> Result<Vec<String>, String> {
 
 #[tauri::command]
 fn trigger_switch_user() -> Result<(), String> {
-    std::process::Command::new("tsdiscon")
-        .spawn()
-        .map_err(|e| e.to_string())?;
+    let mut cmd = std::process::Command::new("tsdiscon");
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+    cmd.spawn().map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -99,6 +103,7 @@ fn get_config(app: tauri::AppHandle) -> Result<modules::config::AppConfig, Strin
 
 #[tauri::command]
 fn save_config(app: tauri::AppHandle, config: modules::config::AppConfig) -> Result<(), String> {
+    modules::logger::set_enabled(config.log_enabled.unwrap_or(true));
     config.save(&app).map_err(|e| e.to_string())
 }
 
@@ -138,6 +143,11 @@ fn log_frontend_error(message: String) {
     modules::logger::error(&format!("[Frontend] {}", message));
 }
 
+#[tauri::command]
+fn clear_log_file() -> Result<(), String> {
+    modules::logger::clear_log().map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -167,15 +177,19 @@ pub fn run() {
             modules::mirror::create_mirror_junction,
             update_tray_language,
             trigger_switch_user,
-            log_frontend_error
+            log_frontend_error,
+            clear_log_file
         ])
         .setup(|app| {
             modules::logger::init(app.handle());
             modules::logger::info("Application starting up...");
 
-            // Load config to determine initial language
+            // Load config to determine initial language and logging state
             let config = modules::config::AppConfig::load(app.handle())
                 .unwrap_or_else(|_| modules::config::AppConfig::default());
+
+            modules::logger::set_enabled(config.log_enabled.unwrap_or(true));
+
             let lang = config.language.unwrap_or_else(|| "zh-CN".to_string());
 
             let (show_text, quit_text) = match lang.as_str() {
@@ -221,6 +235,15 @@ pub fn run() {
                     }
                 })
                 .build(app)?;
+
+            // Automatically show the window on startup to ensure visibility
+            // Moved to frontend main.tsx to ensure theme and LCP are ready
+            /*
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+            */
 
             Ok(())
         })

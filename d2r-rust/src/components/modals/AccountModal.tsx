@@ -230,7 +230,7 @@ export function AccountModal({ isOpen, onClose, config, onSave, editingAccount }
                                             onClick={() => setIsManualInput(true)}
                                             className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-4 decoration-zinc-800"
                                         >
-                                            {t('domain_work_account_link') || "Domain login"}
+                                            {t('domain_work_account_link')}
                                         </button>
                                     ) : (
                                         !editingAccount && (
@@ -314,10 +314,10 @@ export function AccountModal({ isOpen, onClose, config, onSave, editingAccount }
                                 <div className="flex items-start gap-1.5 px-0.5 text-[10px] text-amber-500/80 leading-tight">
                                     <AlertCircle size={12} className="mt-0.5 shrink-0 opacity-70" />
                                     <span>
-                                        {t('pin_warning') || "Real Login Password required. NO PIN/Hello."}
+                                        {t('pin_warning')}
                                         {isHost && (
                                             <span className="block mt-0.5 text-emerald-500 font-bold">
-                                                {t('host_no_pass_hint') || "Current User [Host] doesn't need password."}
+                                                {t('host_no_pass_hint')}
                                             </span>
                                         )}
                                     </span>

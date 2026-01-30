@@ -5,29 +5,33 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: dark;
-  /* Linear Blue: 59 130 246 (#3b82f6) */
+  /* Modern Primary: Blue (59 130 246) by default */
   --color-primary: 59 130 246;
+  --primary-rgb: 59, 130, 246;
 }
 
 body {
-  @apply bg-void text-gray-200 overflow-hidden select-none;
+  @apply bg-zinc-950 text-zinc-200 overflow-hidden select-none;
+  background-image:
+    radial-gradient(circle at 1.5px 1.5px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 32px 32px;
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-void;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-card border border-gray-800 rounded;
+  @apply bg-zinc-800 border border-white/5 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-700;
+  @apply bg-zinc-700;
 }
 
 @layer components {

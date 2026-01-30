@@ -24,7 +24,7 @@ const ManualTools: React.FC<ManualToolsProps> = ({ accounts, selectedAccountId }
             addLog(`✔ ${res}`);
             return res;
         } catch (e) {
-            addLog(`✖ Error: ${e}`);
+            addLog(`✖ ${t('error')}: ${e}`);
             throw e;
         }
     };
@@ -70,7 +70,7 @@ const ManualTools: React.FC<ManualToolsProps> = ({ accounts, selectedAccountId }
                                     </div>
                                 </Button>
                             ) : (
-                                <div className="text-[10px] text-emerald-500/40 flex items-center justify-center border border-dashed border-emerald-500/10 rounded-xl py-6 bg-black/10 italic">
+                                <div className="text-[10px] text-emerald-500/40 flex items-center justify-center border border-dashed border-emerald-500/10 rounded-xl py-6 bg-black/10 uppercase tracking-tight">
                                     {t('no_accounts_hint')}
                                 </div>
                             )}
@@ -121,7 +121,7 @@ const ManualTools: React.FC<ManualToolsProps> = ({ accounts, selectedAccountId }
             <div className="flex-shrink-0 flex flex-col h-[160px] border border-white/10 rounded-2xl overflow-hidden bg-black/20">
                 <div className="bg-zinc-800/80 px-4 py-2 text-[10px] text-zinc-400 uppercase font-bold border-b border-white/5 flex justify-between items-center">
                     <span className="tracking-widest opacity-60">{t('atomic_logs')}</span>
-                    <button onClick={() => setLog([])} className="hover:text-white transition-colors text-zinc-600">{t('clear_logs')}</button>
+                    <button onClick={() => setLog([])} className="hover:text-white transition-colors text-zinc-600">{t('clear_atomic_logs')}</button>
                 </div>
                 <div className="flex-1 bg-black/50 p-4 font-mono text-[11px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800">
                     {log.map((l, i) => (
@@ -129,7 +129,7 @@ const ManualTools: React.FC<ManualToolsProps> = ({ accounts, selectedAccountId }
                             {l}
                         </div>
                     ))}
-                    {log.length === 0 && <span className="text-zinc-800 font-bold">{t('waiting_ops')}</span>}
+                    {log.length === 0 && <span className="text-zinc-800 font-bold uppercase tracking-widest">{t('waiting_ops')}</span>}
                 </div>
             </div>
 

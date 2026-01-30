@@ -49,7 +49,7 @@ const MirrorModal: React.FC<MirrorModalProps> = ({ isOpen, onClose, onLog }) => 
             setMirrorName('');
             onClose();
         } catch (e) {
-            onLog(`✖ Error: ${e}`);
+            onLog(`✖ ${t('error')}: ${e}`);
         } finally {
             setIsCreating(false);
         }

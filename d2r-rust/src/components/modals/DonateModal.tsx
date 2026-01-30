@@ -51,7 +51,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
                             <p className="text-zinc-100 font-bold text-xl leading-relaxed italic drop-shadow-md">
                                 "{t('donate_blessing')}"
                             </p>
-                            <p className="text-[10px] text-yellow-600/60 font-medium uppercase tracking-[0.2em]">Developer Message</p>
+                            <p className="text-[10px] text-yellow-600/60 font-medium uppercase tracking-[0.2em]">{t('donate_developer_msg')}</p>
                         </div>
                     </div>
 
@@ -88,7 +88,7 @@ export function DonateModal({ isOpen, onClose }: DonateModalProps) {
 
                 <div className="p-4 text-center border-t border-white/5 bg-black/10">
                     <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-[0.2em]">
-                        Linear Style Edition • Developed with Passion
+                        {t('donate_edition_desc')}
                     </p>
                 </div>
             </ModalContent>

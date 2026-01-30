@@ -6,6 +6,22 @@ use std::sync::Mutex;
 use tauri::Manager;
 
 static LOG_FILE: Lazy<Mutex<Option<PathBuf>>> = Lazy::new(|| Mutex::new(None));
+static ENABLED: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(true));
+
+pub fn set_enabled(enabled: bool) {
+    let mut e = ENABLED.lock().unwrap();
+    *e = enabled;
+}
+
+pub fn clear_log() -> std::io::Result<()> {
+    let log_path_lock = LOG_FILE.lock().unwrap();
+    if let Some(ref path) = *log_path_lock {
+        if path.exists() {
+            fs::remove_file(path)?;
+        }
+    }
+    Ok(())
+}
 
 pub fn init(app_handle: &tauri::AppHandle) {
     // User requested log file in the same directory as the executable
@@ -31,13 +47,20 @@ pub fn init(app_handle: &tauri::AppHandle) {
         }
     }
 
-    println!("[LOGGER] Log file path: {:?}", log_path);
+    tracing::info!(path = ?log_path, "Log file initialized");
 
     let mut log = LOG_FILE.lock().unwrap();
     *log = Some(log_path);
 }
 
 pub fn log(level: &str, message: &str) {
+    {
+        let enabled = ENABLED.lock().unwrap();
+        if !*enabled {
+            return;
+        }
+    }
+
     let log_path_lock = LOG_FILE.lock().unwrap();
     if let Some(ref path) = *log_path_lock {
         let timestamp = chrono::Local::now().format("%Y-%m-%d %H:%M:%S");

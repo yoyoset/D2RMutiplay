@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { getConfig, launchGame, saveConfig, AppConfig, Account } from "./lib/api";
-import { Settings, Globe, LayoutGrid, Users, Wrench, Heart } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { getConfig, launchGame, saveConfig, AppConfig, Account, getWindowsUsers, getWhoami } from "./lib/api";
+import { Settings, LayoutGrid, Users, Wrench, Heart, ShieldAlert, Check, X, ShieldCheck } from "lucide-react";
 import { SettingsModal } from "./components/modals/SettingsModal";
 import { AccountModal } from "./components/modals/AccountModal";
 import { DonateModal } from "./components/modals/DonateModal";
@@ -8,25 +8,78 @@ import { useTranslation } from "react-i18next";
 import Dashboard from "./components/views/Dashboard";
 import AccountManager from "./components/views/AccountManager";
 import ManualTools from "./components/views/ManualTools";
+import { useStatusStore } from "./store/useStatusStore";
+import { cn } from "./lib/utils";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Button } from "./components/ui/Button";
+import { LanguageSelector } from "./components/ui/LanguageSelector";
 
 type View = 'dashboard' | 'accounts' | 'manual';
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [config, setConfig] = useState<AppConfig>({ accounts: [] });
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [missingAccounts, setMissingAccounts] = useState<Account[]>([]);
+  const [currentUser, setCurrentUser] = useState<string>("");
 
   const loadConfig = async () => {
     try {
       const cfg = await getConfig();
-      setConfig(cfg);
+      setConfig(prev => {
+        if (JSON.stringify(prev) === JSON.stringify(cfg)) return prev;
+        return cfg;
+      });
+      const me = await getWhoami();
+      setCurrentUser(me);
+      return cfg;
     } catch (e) {
       console.error(e);
+      return null;
     }
   };
 
+  const verifyAccounts = async (accounts: Account[]) => {
+    if (accounts.length === 0) return;
+    try {
+      const osUsers = await getWindowsUsers(false);
+      const missing = accounts.filter(acc => {
+        const parts = acc.win_user.split('\\');
+        const normalized = parts[parts.length - 1].toLowerCase();
+        return !osUsers.some(u => u.toLowerCase() === normalized);
+      });
+      if (missing.length > 0) {
+        setMissingAccounts(missing);
+      }
+    } catch (e) {
+      console.error("Verification failed", e);
+    }
+  };
+
+  const { startPolling } = useStatusStore();
+
   useEffect(() => {
-    loadConfig();
+    const init = async () => {
+      const cfg = await loadConfig();
+      if (cfg) {
+        await verifyAccounts(cfg.accounts);
+      }
+      setIsLoaded(true);
+      // Wait a tiny bit for LCP and theme to settle
+      setTimeout(() => {
+        getCurrentWindow().show().catch(console.error);
+        getCurrentWindow().setFocus().catch(console.error);
+      }, 50);
+    };
+    init();
   }, []);
+
+  useEffect(() => {
+    if (config.accounts.length === 0) return;
+    const usernames = config.accounts.map(a => a.win_user);
+    const stop = startPolling(usernames);
+    return () => stop();
+  }, [config.accounts, startPolling]);
 
   const [currentView, setCurrentView] = useState<View>('dashboard');
 
@@ -48,14 +101,12 @@ function App() {
       const g = parseInt(hex.substring(2, 4), 16);
       const b = parseInt(hex.substring(4, 6), 16);
       document.documentElement.style.setProperty('--color-primary', `${r} ${g} ${b}`);
+      document.documentElement.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
     }
   }, [config.theme_color]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
 
-  const handleLaunch = async () => {
+  const handleLaunch = useCallback(async () => {
     if (!selectedAccountId) return;
     const account = config.accounts.find(a => a.id === selectedAccountId);
     if (!account) return;
@@ -68,28 +119,28 @@ function App() {
     } finally {
       setIsLaunching(false);
     }
-  };
+  }, [selectedAccountId, config.accounts]);
 
-  const handleAddAccount = () => {
+  const handleAddAccount = useCallback(() => {
     setEditingAccount(undefined);
     setIsAccountModalOpen(true);
-  };
+  }, []);
 
-  const handleEditAccount = (acc: Account) => {
+  const handleEditAccount = useCallback((acc: Account) => {
     setEditingAccount(acc);
     setIsAccountModalOpen(true);
-  };
+  }, []);
 
-  const handleDeleteAccount = async (id: string) => {
+  const handleDeleteAccount = useCallback(async (id: string) => {
     const newAccounts = config.accounts.filter(a => a.id !== id);
     const newConfig = { ...config, accounts: newAccounts };
     setConfig(newConfig);
     try {
       await saveConfig(newConfig);
     } catch (e) { console.error(e); }
-  };
+  }, [config]);
 
-  const handleReorder = async (newAccounts: Account[]) => {
+  const handleReorder = useCallback(async (newAccounts: Account[]) => {
     const newConfig = { ...config, accounts: newAccounts };
     setConfig(newConfig);
     try {
@@ -97,12 +148,21 @@ function App() {
     } catch (e) {
       console.error("Failed to save order", e);
     }
+  }, [config]);
+
+  const syncMissingAccounts = async () => {
+    const missingIds = new Set(missingAccounts.map(a => a.id));
+    const newAccounts = config.accounts.filter(a => !missingIds.has(a.id));
+    const newConfig = { ...config, accounts: newAccounts };
+    setConfig(newConfig);
+    await saveConfig(newConfig);
+    setMissingAccounts([]);
   };
 
-  return (
-    <div className="h-screen overflow-hidden bg-zinc-950 text-gray-200 flex flex-col font-sans selection:bg-gold/30 selection:text-black">
-      <div className="fixed inset-0 bg-[url('/bg-pattern.svg')] opacity-5 pointer-events-none"></div>
+  if (!isLoaded) return null;
 
+  return (
+    <div className="h-screen overflow-hidden bg-transparent text-gray-200 flex flex-col font-sans selection:bg-gold/30 selection:text-black">
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -121,65 +181,112 @@ function App() {
         onClose={() => setIsDonateOpen(false)}
       />
 
-      <header className="h-16 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md z-50 flex items-center px-6 justify-between shadow-xl">
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <span className="font-bold text-base text-white tracking-tight leading-none">D2R <span className="text-zinc-500 font-normal">Multi</span></span>
-              <div className="flex items-center gap-1 text-[9px] font-bold px-1 py-0.5 rounded bg-emerald-500/10 text-emerald-500/80 border border-emerald-500/10">
-                <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span>ADMIN</span>
+      {/* Startup Conflict Overlay */}
+      {missingAccounts.length > 0 && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl scale-in-center overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-amber-500/30"></div>
+            <div className="flex items-center gap-4 mb-3 text-amber-500">
+              <ShieldAlert size={28} />
+              <h3 className="text-xl font-bold tracking-tight uppercase">{t('user_not_found')}</h3>
+            </div>
+            <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
+              {t('missing_users_desc')}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {missingAccounts.map(a => (
+                  <span key={a.id} className="px-2 py-1 rounded bg-black/40 border border-white/5 text-[10px] text-zinc-500 font-bold uppercase">{a.win_user}</span>
+                ))}
               </div>
+            </p>
+            <div className="flex gap-3 mt-8">
+              <Button
+                variant="ghost"
+                className="flex-1 text-zinc-500 hover:text-white"
+                onClick={() => setMissingAccounts([])}
+              >
+                <X size={14} className="mr-2" />
+                {t('ignore')}
+              </Button>
+              <Button
+                variant="solid"
+                className="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold"
+                onClick={syncMissingAccounts}
+              >
+                <Check size={14} className="mr-2" />
+                {t('sync_delete')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <header className="flex-shrink-0 h-16 linear-glass border-b border-white/5 flex items-center justify-between px-6 z-50">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3 font-sans">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
+              <LayoutGrid size={18} className="text-primary" />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-sm font-bold tracking-tight text-white uppercase leading-tight">D2R Multiplay</h1>
+              <span className="text-[9px] text-zinc-500 font-medium tracking-[0.2em] leading-none">COMMANDER v0.1.3</span>
             </div>
           </div>
 
-          <nav className="flex items-center gap-1 bg-zinc-900/50 p-1 rounded-lg border border-white/5">
+          <nav className="flex items-center bg-zinc-900/40 p-1 rounded-full border border-white/5">
             <button
               onClick={() => setCurrentView('dashboard')}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm transition-all ${currentView === 'dashboard' ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+              className={cn(
+                "flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all",
+                currentView === 'dashboard' ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-zinc-500 hover:text-zinc-200"
+              )}
             >
-              <LayoutGrid size={16} />
-              {t('dashboard')}
+              <LayoutGrid size={13} />
+              <span>{t('dashboard')}</span>
             </button>
             <button
               onClick={() => setCurrentView('accounts')}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm transition-all ${currentView === 'accounts' ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+              className={cn(
+                "flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all",
+                currentView === 'accounts' ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-zinc-500 hover:text-zinc-200"
+              )}
             >
-              <Users size={16} />
-              {t('accounts')}
+              <Users size={13} />
+              <span>{t('accounts')}</span>
             </button>
             <button
               onClick={() => setCurrentView('manual')}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm transition-all ${currentView === 'manual' ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+              className={cn(
+                "flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all",
+                currentView === 'manual' ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-zinc-500 hover:text-zinc-200"
+              )}
             >
-              <Wrench size={16} />
-              {t('manual')}
+              <Wrench size={13} />
+              <span>{t('manual_tools')}</span>
             </button>
           </nav>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Globe size={14} className="text-zinc-500" />
-            <select
-              className="bg-transparent text-xs text-zinc-400 outline-none cursor-pointer hover:text-zinc-200"
-              value={i18n.language}
-              onChange={(e) => changeLanguage(e.target.value)}
-            >
-              <option value="zh-CN">ZH</option>
-              <option value="en">EN</option>
-            </select>
+        <div className="flex items-center gap-4 text-zinc-400">
+          {/* Identity Display */}
+          <div className="hidden lg:flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-primary/5 border border-primary/10 mr-1 group/id cursor-default">
+            <ShieldCheck size={14} className="text-primary/40 group-hover/id:text-primary/80 transition-colors" />
+            <div className="flex flex-col">
+              <span className="text-[9px] uppercase tracking-tighter text-zinc-600 font-black leading-none">{t('current_admin')}</span>
+              <span className="text-[11px] text-primary/70 font-mono font-bold leading-tight tracking-tight">{currentUser}</span>
+            </div>
           </div>
+
+          <LanguageSelector />
 
           <button
             onClick={() => setIsDonateOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gold/20 text-gold-light hover:bg-gold/30 transition-all border border-gold/40 hover:border-gold shadow-glow-gold animate-glow-pulse"
+            className="group flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 hover:border-primary/40 transition-all font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)] hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]"
           >
-            <Heart size={14} fill="currentColor" className="text-gold" />
-            <span className="text-xs font-bold tracking-tight">{t('donate')}</span>
+            <Heart size={14} className="text-primary group-hover:scale-125 transition-transform" fill="currentColor" fillOpacity={0.2} />
+            <span className="text-[11px] tracking-widest uppercase">{t('donate')}</span>
           </button>
 
-          <button onClick={() => setIsSettingsOpen(true)} className="text-zinc-500 hover:text-gold transition-colors">
+          <button onClick={() => setIsSettingsOpen(true)} className="text-zinc-500 hover:text-zinc-200 transition-colors">
             <Settings size={18} />
           </button>
         </div>
@@ -195,6 +302,7 @@ function App() {
             isLaunching={isLaunching}
             onReorder={handleReorder}
             onEdit={handleEditAccount}
+            currentUser={currentUser}
           />
         )}
         {currentView === 'accounts' && (

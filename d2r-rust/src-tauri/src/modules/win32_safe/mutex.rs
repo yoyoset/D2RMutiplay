@@ -2,10 +2,10 @@ use std::ffi::c_void;
 use std::mem::size_of;
 
 use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind};
-use windows::core::{PCWSTR, PWSTR};
+use windows::core::PCWSTR;
 use windows::Win32::Foundation::{
-    CloseHandle, DuplicateHandle, DUPLICATE_CLOSE_SOURCE, DUPLICATE_HANDLE_OPTIONS, HANDLE,
-    INVALID_HANDLE_VALUE, LUID, NTSTATUS, STATUS_INFO_LENGTH_MISMATCH, STATUS_SUCCESS,
+    CloseHandle, DuplicateHandle, DUPLICATE_CLOSE_SOURCE, DUPLICATE_HANDLE_OPTIONS, HANDLE, LUID,
+    NTSTATUS, STATUS_INFO_LENGTH_MISMATCH, STATUS_SUCCESS,
 };
 use windows::Win32::Security::{
     AdjustTokenPrivileges, LookupPrivilegeValueW, LUID_AND_ATTRIBUTES, SE_PRIVILEGE_ENABLED,
@@ -120,8 +120,6 @@ pub fn close_d2r_mutexes() -> Result<usize, anyhow::Error> {
     // Enable SeDebugPrivilege to ensure we can OpenProcess target games
     if let Err(e) = enable_debug_privilege() {
         crate::modules::logger::warn(&format!("Failed to enable SeDebugPrivilege: {}", e));
-    } else {
-        crate::modules::logger::info("SeDebugPrivilege enabled successfully.");
     }
 
     unsafe {

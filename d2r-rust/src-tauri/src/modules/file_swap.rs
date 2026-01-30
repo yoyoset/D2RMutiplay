@@ -53,7 +53,12 @@ pub fn rotate_save(app: &AppHandle, last_account_id: &str) -> Result<(), FileSwa
             Ok(())
         }
         Err(e) => {
-            tracing::error!("Backup failed: {:?} -> {:?} (Error: {})", current_db, snapshot_path, e);
+            tracing::error!(
+                "Backup failed: {:?} -> {:?} (Error: {})",
+                current_db,
+                snapshot_path,
+                e
+            );
             Err(e.into())
         }
     }
@@ -63,18 +68,24 @@ pub fn rotate_save(app: &AppHandle, last_account_id: &str) -> Result<(), FileSwa
 pub fn delete_config() -> Result<(), FileSwapError> {
     let target_db = get_bnet_config_path()?;
     if target_db.exists() {
+        // Double check existence before deletion to avoid race conditions
         match fs::remove_file(&target_db) {
             Ok(_) => {
-                tracing::info!("Config deleted successfully: {:?}", target_db);
+                tracing::info!(path = ?target_db, "Config deleted successfully.");
                 Ok(())
             }
             Err(e) => {
-                tracing::error!("Failed to delete config: {:?} (Error: {})", target_db, e);
+                // If it's a "file not found" by now, it's actually success for us
+                if e.kind() == std::io::ErrorKind::NotFound {
+                    tracing::info!(path = ?target_db, "Config already gone.");
+                    return Ok(());
+                }
+                tracing::error!(path = ?target_db, error = %e, "Failed to delete config (Possiby locked by Battle.net).");
                 Err(FileSwapError::FileDeletionFailed(e))
             }
         }
     } else {
-        tracing::info!("Config deletion skipped (Not Found): {:?}", target_db);
+        tracing::info!(path = ?target_db, "Config deletion skipped (Already clean).");
         Ok(())
     }
 }
@@ -83,7 +94,7 @@ pub fn delete_config() -> Result<(), FileSwapError> {
 pub fn restore_snapshot(app: &AppHandle, account_id: &str) -> Result<(), FileSwapError> {
     let target_db = get_bnet_config_path()?;
     let snapshot_path = get_snapshot_path(app, account_id)?;
-    
+
     if snapshot_path.exists() {
         if let Some(parent) = target_db.parent() {
             fs::create_dir_all(parent)?;
