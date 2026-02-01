@@ -5,7 +5,7 @@
 # D2RMultiplay v0.5.6
 
 D2R 自动化多开与免验证登录工具。
-
+-- 全新的RUST迁移https://github.com/yoyoset/D2R_Multi_rust
 ## 🚀 核心方案
 
 ### 1. 免重复登录与验证
@@ -79,7 +79,7 @@ D2R 自动化多开与免验证登录工具。
 [ 简体中文 ](#cn) | [ English ](#en)
 
 # D2R Multiplay Tool (v0.5.6)
-
+-- NEW RUST VERSION https://github.com/yoyoset/D2R_Multi_rust
 Simplest D2R Multi-Opening Tool | Lightweight & Open Source | Safe Process Isolation
 
 [简体中文](README.md) | [English](README_EN.md)
