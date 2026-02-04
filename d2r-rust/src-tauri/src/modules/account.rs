@@ -86,10 +86,13 @@ pub fn launch_game(
     let _ = config.save(app);
 
     // 7. Launch Battle.net
-    let bnet_path_buf = get_bnet_path().ok_or(AccountError::InvalidPath)?;
+    let bnet_path_buf = get_bnet_path().ok_or_else(|| {
+        tracing::error!("未能在标准位置或注册表中找到 Battle.net 执行文件");
+        AccountError::InvalidPath
+    })?;
     let bnet_path = bnet_path_buf
         .to_str()
-        .ok_or_else(|| anyhow::anyhow!("Non-UTF8 path detected"))?;
+        .ok_or_else(|| anyhow::anyhow!("路径包含非 UTF-8 字符，无法处理: {:?}", bnet_path_buf))?;
 
     let working_dir = bnet_path_buf
         .parent()
@@ -199,31 +202,34 @@ pub fn get_accounts_process_status(
     state: tauri::State<'_, crate::state::AppState>,
     usernames: Vec<String>,
 ) -> HashMap<String, AccountStatus> {
-    let sys = state.sys.lock().unwrap();
-    let users = state.users.lock().unwrap();
+    // 1. 先进行信息刷新，刷新过程不需要一直占着锁，或者我们只刷新必要部分
+    {
+        let mut sys = state.sys.lock().unwrap();
+        sys.refresh_processes_specifics(
+            sysinfo::ProcessesToUpdate::All,
+            true, // 只有为 true 时才会扫描进程的用户信息
+            sysinfo::ProcessRefreshKind::nothing()
+                .with_user(sysinfo::UpdateKind::Always)
+                .with_exe(sysinfo::UpdateKind::OnlyIfNotSet),
+        );
+    } // 锁在这里释放
 
-    // Simplified: Just use the cached/passed usernames.
-    // We don't need to scan registry every 10 seconds for user existence.
-    // That's what caused the flash.
-
+    // 2. 准备状态映射
     let mut status_map = HashMap::new();
     for u in &usernames {
-        let _normalized_requested = if let Some(pos) = u.find('\\') {
-            &u[pos + 1..]
-        } else {
-            u.as_str()
-        }
-        .to_lowercase();
-
         status_map.insert(
             u.clone(),
             AccountStatus {
                 bnet_active: false,
                 d2r_active: false,
-                exists: true, // Assume exists, or handle elsewhere
+                exists: true,
             },
         );
     }
+
+    // 3. 再次取锁并遍历结果
+    let sys = state.sys.lock().unwrap();
+    let users = state.users.lock().unwrap();
 
     for process in sys.processes().values() {
         let name = process.name().to_string_lossy();
@@ -244,12 +250,13 @@ pub fn get_accounts_process_status(
                         .to_lowercase();
 
                         if proc_user == normalized_requested {
-                            let entry = status_map.get_mut(requested_user).unwrap();
-                            if is_bnet {
-                                entry.bnet_active = true;
-                            }
-                            if is_d2r {
-                                entry.d2r_active = true;
+                            if let Some(entry) = status_map.get_mut(requested_user) {
+                                if is_bnet {
+                                    entry.bnet_active = true;
+                                }
+                                if is_d2r {
+                                    entry.d2r_active = true;
+                                }
                             }
                         }
                     }

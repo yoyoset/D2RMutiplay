@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2026-02-04
+
+### Security
+
+- **Win32 Bottom-level Hardening**:
+  - Refactored `enable_debug_privilege` using `HandleGuard` for RAII handle management.
+  - Replaced hardcoded pointer arithmetic in `mutex.rs` with safer struct field access to prevent potential crashes on future Windows updates.
+
+### Performance
+
+- **Concurrency Optimization**: Reduced `AppState` mutex lock scope during process status checks, significantly improving UI responsiveness and preventing input lag.
+- **Improved Error Reporting**: Added detailed logging for Battle.net launch failures, including path validation and character encoding checks.
+
 ## [0.1.2] - 2026-01-27
 
 ### Fixed

@@ -65,37 +65,32 @@ struct UNICODE_STRING_COMPAT {
     buffer: *mut u16,
 }
 
-/// Enable SeDebugPrivilege for the current process
+/// 启用当前进程的 SeDebugPrivilege 权限，以便操作其他进程的句柄
 fn enable_debug_privilege() -> anyhow::Result<()> {
     unsafe {
         let mut token = HANDLE::default();
-        if OpenProcessToken(
+        OpenProcessToken(
             GetCurrentProcess(),
             TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY,
             &mut token,
         )
-        .is_err()
-        {
-            return Err(anyhow::anyhow!("OpenProcessToken failed"));
-        }
+        .map_err(|e| anyhow::anyhow!("打开进程令牌失败: {}", e))?;
+
+        // 使用 HandleGuard 确保令牌句柄被自动关闭
+        let _guard = crate::modules::win32_safe::handle::HandleGuard::new(token);
 
         let mut luid = LUID::default();
-        // "SeDebugPrivilege\0" encoded as UTF-16
         let priv_name: Vec<u16> = "SeDebugPrivilege"
             .encode_utf16()
             .chain(std::iter::once(0))
             .collect();
 
-        if LookupPrivilegeValueW(
+        LookupPrivilegeValueW(
             PCWSTR::null(),
             PCWSTR::from_raw(priv_name.as_ptr()),
             &mut luid,
         )
-        .is_err()
-        {
-            let _ = CloseHandle(token);
-            return Err(anyhow::anyhow!("LookupPrivilegeValueW failed"));
-        }
+        .map_err(|e| anyhow::anyhow!("查找权限值失败: {}", e))?;
 
         let tp = TOKEN_PRIVILEGES {
             PrivilegeCount: 1,
@@ -105,12 +100,9 @@ fn enable_debug_privilege() -> anyhow::Result<()> {
             }],
         };
 
-        if AdjustTokenPrivileges(token, false, Some(&tp), 0, None, None).is_err() {
-            let _ = CloseHandle(token);
-            return Err(anyhow::anyhow!("AdjustTokenPrivileges failed"));
-        }
+        AdjustTokenPrivileges(token, false, Some(&tp), 0, None, None)
+            .map_err(|e| anyhow::anyhow!("调整令牌权限失败: {}", e))?;
 
-        let _ = CloseHandle(token);
         Ok(())
     }
 }
@@ -164,9 +156,8 @@ pub fn close_d2r_mutexes() -> Result<usize, anyhow::Error> {
 
         let info = &*(buffer.as_ptr() as *const SYSTEM_HANDLE_INFORMATION_EX);
 
-        // Offset of 'handles' is 16 bytes on x64 (2 x usize)
-        let handle_ptr =
-            buffer.as_ptr().add(size_of::<usize>() * 2) as *const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX;
+        // 使用 .handles.as_ptr() 代替硬编码的 size_of 指针加法，增加兼容性
+        let handle_ptr = info.handles.as_ptr();
         let handles = std::slice::from_raw_parts(handle_ptr, info.number_of_handles);
 
         // 3. Find our temp mutex's type index
